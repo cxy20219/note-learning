@@ -136,3 +136,122 @@ int main(){
 	return 0;
 }
 ```
+## string容器
+
+### 1.构造函数
+* string(); //创建一个空字符串
+* string(const char* s); //使用字符串s初始化
+* string(const string& str); //使用string对象初始化另一个对象
+* string(int n,char c); //使用n个字符c初始化 
+```c++
+# include <iostream>
+# include <string>
+using namespace std;
+void test01(){
+	//默认构造
+	string s1; 
+	
+	//字符串初始化 
+	const char* str="hello world";
+	string s2(str);   
+	cout<<"s2="<<s2<<endl;
+	
+	//拷贝
+	string s3(s2);
+	cout<<"s3="<<s3<<endl;
+	
+	string s4(10,'a');
+	cout<< "s4="<<s4; 
+}
+int main(){
+	test01();
+	return 0;
+} 
+```
+
+### 2.赋值
+```c++
+void test02(){
+	// char*类型字符串赋值 
+	string str1;
+	str1="hello world";
+	cout<<"str1="<<str1<<endl;
+	
+	// 字符串赋值 
+	string str2;
+	str2 = str1;
+	cout<<"str2="<<str2<<endl;
+	
+	// 单个字符赋值
+	string str3;
+	str3='a';
+	cout<<"str3="<<str3<<endl;
+	
+	// assign赋值
+	string str4;
+	str4.assign("hello world c++");
+	cout<<"str4="<<str4<<endl;
+	
+	// assign 把前n个字符赋值给当前字符串
+	string str5;
+	str5.assign("hello c++",5);
+	cout<<"str5="<<str5<<endl; 
+	
+	// assign 把另一个字符串赋值给当前字符串 
+	string str6;
+	str6.assign(str5);
+	cout<<"str6="<<str6<<endl;
+	
+	// assign 把n个字符赋值给当前字符产
+	string str7;
+	str7.assign(10,'w');
+	cout<<"str7="<<str7<<endl; 
+}
+```
+
+### 3.字符串的拼接
+```c++
+void test03(){
+	// 重载+= 字符串操作 
+	// 字符串拼接 
+	string str1= "我";
+	str1 +="爱c++";
+	cout<<str1<<endl; 
+	
+	// 字符拼接 
+	 str1+=";";
+	 cout<<str1<<endl;
+	 
+	//  字符串相加
+	string str2="我爱python;";
+	str2+=str1;
+	cout<<str2<<endl; 
+	
+	// append方式拼接
+	// 拼接字符串
+	string str3="I";
+	str3.append("love");
+	cout<<"str3="<<str3<<endl;
+	
+	// 把字符串前n个字符拼接到当前字符串
+	str3.append("Java web",4);
+	cout<<"str3="<<str3<<endl; 
+	 
+	//  拼接指定字符
+	str3.append(str2,0,2);
+	cout<<str3<<endl;
+}
+```
+## set/multiset容器
+
+简介：
+* 所有元素被插入时会自动被排序
+* 本质由关联式容器，底层由二叉树实现
+
+区别：
+* set不允许容器由重复的元素
+* multiset允许容器有重复的元素
+
+```c++
+
+```

@@ -122,3 +122,126 @@ public class demo2 {
 }
 ```
 ### 2.4 类型转换
+转换时尽量将小的转换为大的**避免内存溢出**
+
+```
+graph LR
+byte,short,char-->int
+int-->long
+long-->float
+float-->double
+```
+
+例：
+```java
+public class demo3 {
+    public static void main(String[] args){
+        //从低到高自动转换
+        int i=128;
+        double b=i;
+        //从高到低强制转换
+        byte n=(byte)i;      //输出-128内存溢出
+        //JDK7新特性,数字之间可以加_分割
+        int num=1_000_000    //输出1000000
+        System.out.println(i); 
+    }
+}
+```
+注：
+* 不能对布尔类型转换
+* 不能转换到别的类型
+* 转换的时候主义内存溢出
+* 数字之间可以加_分割 
+
+### 2.5 作用域
+* 局部变量 ——必须声明和初始化值
+* 实例变量 ——从属于对象需要实列化对象后使用
+* 类变量　 ——从属于类，加上static关键字
+* 常量  　　——定义后不能改变值，加上final关键字
+
+例：
+```java
+public class demo4 {
+    //类变量 static关键字
+    static double salary=2500;
+    
+    //实列变量
+    String name;
+    int age;
+    
+    //常量 加上final关键字 这是修饰符不区分前后
+    static final double PI=3.14;
+    final static double pi=3.14;
+    
+    public static void main(String[] args) {
+        //局部变量
+        int i=10;
+    }
+}
+
+```
+### 2.6 运算符
+* 算数运算符：+　 -　 *　 /　 %　 ++　 --
+* 赋值运算符：＝
+* 关系运算符：＞　＜　>=　<=　!=　instanceof
+* 逻辑运算符：&&　||　！
+* 位运算符：　&　|　^　~　>>　<<　>>>
+* 条件运算符：?　:
+* 扩展赋值运算符：+=　-=　*=　/=
+
+>IDEA快捷键ctrl+D 复制当前行到下一行
+```java
+package operator;
+
+public class Demo1 {
+    public static void main(String[] args){
+        //IDEA快捷键ctrl+D 复制当前行到下一行
+        
+        //幂运算
+        double pow=Math.pow(2,3);
+        System.out.print(pow);
+        
+        //位运算
+        /*
+        A=0011 1100
+        B=0000 1101
+        ------------------
+        A&B=0000 1100
+        A|B=0011 1101
+        A^B=0011 0001  //异或操作 相同的是0不相同的是1
+        ~B=1111 0010
+        
+        //运算效率高
+        << 左移运算符   *2
+        >> 右移运算符   /2
+        0000 0001   1
+        0000 0010   2
+        0000 0100   4
+        0000 1000   8
+         */
+         
+        //字符串连接
+        int a=10;
+        int b=20;
+        System.out.println(""+a+b);  //输出1020字符串
+        System.out.println(a+b+"");  //输出30数字
+    }
+}
+
+```
+**三元运算符：**
+`x ? y : z`  
+*如果x为true，则结果为y,如果x为false，结果为z*  
+
+```java
+package operator;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        int a=70;
+        String type= a>60?"及格":"不及格";
+        System.out.println(type); //输出结果 及格
+    }
+}
+```
+
