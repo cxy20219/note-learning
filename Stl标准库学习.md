@@ -253,5 +253,86 @@ void test03(){
 * multiset允许容器有重复的元素
 
 ```c++
+# include <iostream>
+# include <set>
+using namespace std;
+void printSet(set<int>&s){
+	for(set<int>::iterator it=s.begin();it!=s.end();it++){
+		cout<<*it<<" ";
+	}
+	cout<<endl;
+}
+void test01(){
+	//容器的构造与赋值
+	set<int> s1;
+	
+	//插入数据只有insert方法
+	s1.insert(10);
+	s1.insert(5); 
+	s1.insert(20);
+	s1.insert(5);
+	
+	//输出容器元素 
+	printSet(s1);
+	
+	//拷贝构造
+	set<int>s2(s1);
+	printSet(s2); 
+	
+	//赋值
+	set<int>s3;
+	s3=s2;
+	printSet(s3);
+}
 
+int main(){
+	test01();
+	return 0;
+} 
+```
+* 自定义排序
+```c++
+# include <iostream> 
+# include <set>
+using namespace std;
+class Person{
+	public:
+	Person(string name,int age){
+		this->m_Name=name;
+		this->m_Age=age;
+	} 
+	string m_Name;
+	int m_Age;
+};
+class comparePerson{
+	public:
+		bool operator()(const Person&p1,const Person&p2){
+			//按照年龄降序排序
+			return p1.m_Age >p2.m_Age; 
+		}
+}; 
+void test01(){
+	// 自定义数据类型都会指定排序规则 
+	// 把排序规则放进容器 
+	set<Person,comparePerson>s;
+	
+	//创建Person对象
+	Person p1("刘备",24);
+	Person p2("关羽",28);
+	Person p3("张飞",25);
+	
+	//把数据放入容器 
+	s.insert(p1);
+	s.insert(p2);
+	s.insert(p3);
+	 
+	//遍历
+	for(set<Person,comparePerson>::iterator it=s.begin();it!=s.end();it++){
+		cout<<"姓名:"<<it->m_Name<<"年龄:"<<it->m_Age<<endl; 
+	} 
+}
+int main(){
+	test01();
+	return 0;
+} 
 ```

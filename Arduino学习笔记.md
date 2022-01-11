@@ -78,3 +78,108 @@ void loop() {
 
 }
 ```
+## 5. 广告灯效果实验
+```arduino
+int BASE = 2; // 第一个Led I/O脚
+int NUM = 6; // LED的数量
+void setup() {
+  for(int i=BASE;i<BASE+NUM;i++){
+      pinMode(i,OUTPUT);    
+  }
+}
+
+void loop() {
+  for(int i=BASE;i<BASE+NUM;i++){
+      digitalWrite(i,LOW);
+      delay(200); // 延时200毫秒   
+  }
+  for(int i=BASE;i<BASE+NUM;i++){
+      digitalWrite(i,HIGH);
+      delay(200); // 延时200毫秒   
+  }
+}
+```
+## 6. PWM灯光调控亮度实验
+```aduino
+int potIn = 0;   //定义模拟接口0
+int ledPin = 3;  //定义数字接口11(PWM输出)
+int val;        //暂存来自传感器的变量
+void setup() {
+  pinMode(ledPin,OUTPUT); //定义数字接口为输出
+  Serial.begin(9600);
+
+  //模拟接口自动设置为输入
+}
+
+void loop() {
+  val=analogRead(potIn);      //读取传感器模拟值
+  val=map(val,0,1023,0,255); //将val映射到0~255
+  Serial.println(val);       //输出模拟值
+  analogWrite(ledPin,val);    //PWM最高输出255
+  delay(10);                  //延时0.01秒
+}
+```
+## 7. 抢答器设计实验
+```arduino
+int greenPin=5;
+int yellowPin=6;
+int redPin=7;
+int greenLed=10;
+int yellowLed=9;
+int redLed=8;
+int red;
+int yellow;
+int green;
+void setup() {
+  pinMode(greenLed,OUTPUT);
+  pinMode(yellowLed,OUTPUT);
+  pinMode(redLed,OUTPUT);
+  pinMode(greenPin,INPUT);
+  pinMode(yellowPin,INPUT);
+  pinMode(redPin,INPUT);
+}
+
+void loop() {
+  red=digitalRead(redPin);
+  if(red==LOW){
+      digitalWrite(redLed,LOW);
+    }
+  else{
+      digitalWrite(redLed,HIGH);
+    }
+  green=digitalRead(greenPin);
+  if(green==LOW){
+      digitalWrite(greenLed,LOW);
+    }
+  else{
+      digitalWrite(greenLed,HIGH);
+    }
+  yellow=digitalRead(yellowPin);
+  if(yellow==LOW){
+      digitalWrite(yellowLed,LOW);
+    }
+  else{
+      digitalWrite(yellowLed,HIGH);
+    }
+}
+```
+## 8. 倾斜开关实验
+```arduino
+void setup() {
+  pinMode(8,OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int i;
+  i=analogRead(5);
+  if(i>250){
+    digitalWrite(8,HIGH);
+  }
+  else{
+    digitalWrite(8,LOW);
+  }
+  delay(10);
+}
+
+```

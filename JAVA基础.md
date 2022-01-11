@@ -35,7 +35,7 @@ cd到文件目录输入: `javac 文件名.java`
 dos命令行输入: `java 文件名`
 ---
 
-## 2. 基本语法
+## 2. 基础
 
 ### 2.1 注释
 
@@ -245,3 +245,223 @@ public class Demo2 {
 }
 ```
 
+### 2.7 包机制
+
+ * 包的本质是一个文件夹  (放在最上面)  
+ 语法格式：`package package1`
+ * 一般将域名倒置作为包名  
+ 例如：*top.cxy96.blog*
+ * 导包  
+ 语法格式：`import package1`  
+
+[阿里巴巴开发手册](https://www.w3cschool.cn/alibaba_java/)
+### 2.8 javadoc
+
+* javadoc命令是用来生成API文档
+
+参数信息:
+* @author 作者名
+* @version 版本号
+* @since 指明需要最早使用的jdk版本
+* @param 参数名
+* @return 返回值情况
+* @throws 异常抛出情况
+
+[API帮助文档](https://www.oracle.com/cn/java/technologies/java-se-api-doc.html)
+```java
+package top.base;
+
+/**
+ * @author  lvchneg
+ * @version 1.0
+ * @since 1.8
+ */
+public class demo5 {
+    String name;
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    public String test(String name)throws Exception{
+        return name;
+    }
+}
+```
+命令行生成Javadoc文档  
+`javadoc -encoding UTF-8 -charset UTF-8 文件名.java`  
+IDEA生成javadoc文档  
+[https://blog.csdn.net/qq_44122193/article/details/114789427](https://blog.csdn.net/qq_44122193/article/details/114789427)
+
+## 3. 流程控制
+
+### 3.1 用户交互
+**JAVA提供了一个工具类可以获取用户的输入。 java.util.Scanner是java5的新特征可以通过Scanner获取用户的输入。**
+
+基本语法:  
+`Scanner s=new Scanner(System.in)`
+
+**通过 Scanner类的 next() 和 nextLine()方法获取输入的字符串，在读取前要使用 hasNext() 和 hasNextLine() 判断是否还有输入的数据**
+
+**next()方法：**
+```java
+package top.cxy96.process_control;
+import java.util.Scanner;
+public class userScanner_next {
+    public static void main(String[] args) {
+        // 创建一个扫描器对象，用于接受键盘数据
+        Scanner scanner=new Scanner(System.in);
+        
+        System.out.println("使用next接收：");
+        //判断有无输入字符串
+        if(scanner.hasNext()){
+            String str=scanner.next();            //输入内容：hello world
+            System.out.println("输出内容为："+str); //输出内容：hello
+        }
+        //用完关掉节省资源
+        scanner.close();
+    }
+}
+```
+**nextLine()方法：**
+```java
+package top.cxy96.process_control;
+import java.util.Scanner;
+public class userScanner_nextLine {
+    public static void main(String[] args) {
+        // 创建一个扫描器对象，用于接受键盘数据
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("使用nextLine接收：");
+        //判断有无输入字符串
+        if(scanner.hasNextLine()){
+            String str= scanner.nextLine();      //输入hello world
+            System.out.println("输出内容："+str); //输出hello world
+        }
+        //用完关掉节省资源
+        scanner.close();
+    }
+}
+```
+* next() 
+1. 一定要读取到有效字符后才可以结束输入
+2. 对输入有效字符前遇到的空白，next()方法会自动将其去掉
+3. 只有输入有效字符后才将其后面的空白作为分隔符或者结束符
+4. ==next()不能得到带有空格的字符串==
+* nextLine()
+1. 以Enter为结束符，nextLine()方法返回的是输入回车前的所有字符
+2. 可以得到空白
+
+### 3.2 顺序结构
+**java语句之间是从上到下一次执行**
+```java
+package top.cxy96.process_control;
+
+public class demo1 {
+    public static void main(String[] args) {
+        System.out.println("hello1");
+        System.out.println("hello2");
+        System.out.println("hello3");
+        //输出
+        /*
+        hello1
+        hello2
+        hello3
+         */
+    }
+}
+```
+### 3.3 选择结构
+**if 判断 基本语法：**
+```java
+if(判断条件1){
+    执行方法1
+}
+else if(判断条件2){
+    执行方法2
+}
+else{
+    执行方法3
+}
+```
+**switch 语句变量类型**
+* byte、short、int、char
+* Java SE7 开始支持字符串String类型
+* case 必须为字符串常量或字面量
+
+**switch判断 基本语法**
+```java
+switch(expression){
+    case value :
+       //语句
+       break; //可选
+    case value :
+       //语句
+       break; //可选
+    //你可以有任意数量的case语句
+    default : //可选
+       //语句
+}
+```
+### 3.4 循环结构
+1. **while循环**   
+基本语法：
+```java
+while(判断条件){
+    //循环内容
+}
+```
+2. **do···while循环**  
+与while区别会==先执行一次==  
+基本语法：
+```java
+do{
+    //循环内容
+}whiel(判断条件);
+```
+3. **for循环**
+基本语法：
+```java
+for(初始化值，判断，更新语句){
+    //循环内容
+}
+```
+IDEA小tip:  ==100.for+Enter==
+```java
+    for (int i = 0; i < 100; i++) {
+            
+    }
+```
+4. **增强for循环（java5引入）**  
+基本语法：
+```java
+for(声明语句 : 表达式){
+    //执行语句
+}
+```
+例：
+```java
+package top.cxy96.process_control;
+
+public class 增强for循环 {
+    public static void main(String[] args) {
+        // 定义数组
+        int[] numbers={10,20,30,40};
+        // 增强for循环
+        for(int x:numbers){
+            System.out.println(x);
+        }
+    }
+}
+```
+### 3.5 break/continue
+* break:跳出循环
+* continue:跳出==本次==循环
+* goto:跳到指定语句(一般不用)
+```java
+    outer :语句
+          break outer    //跳到outer的语句
+          continue outer //跳到outer语句
+```
