@@ -183,3 +183,109 @@ void loop() {
 }
 
 ```
+
+## 9. 有源蜂鸣器实验
+```arduino
+int buzzer=9;
+void setup() {
+  pinMode(buzzer,OUTPUT);
+}
+
+void loop() {
+  digitalWrite(buzzer,HIGH);
+  delay(100);
+  digitalWrite(buzzer,LOW);
+  delay(100);
+}
+```
+## 10. 无源蜂鸣器实验
+```arduino
+int buzzer=9;
+void setup() {
+  pinMode(buzzer,OUTPUT);
+}
+void loop()
+{
+for(int i=200;i<=800;i++)                    //用循环的方式将频率从200HZ 增加到800HZ
+{
+  pinMode(buzzer,OUTPUT);
+  tone(buzzer,i);                            //在四号端口输出频率
+delay(5);                              //该频率维持5毫秒   
+}
+delay(4000);                            //最高频率下维持4秒钟
+for(int i=800;i>=200;i--)
+{
+  pinMode(buzzer,OUTPUT);
+  tone(buzzer,i);
+delay(10);
+}
+}
+```
+## 11. 模拟值读取实验
+```arduino
+int potPin=0;
+int ledPin=9;
+int val;
+void setup() {
+  pinMode(ledPin,OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(ledPin,HIGH);
+  val=analogRead(potPin);
+  Serial.println(val);
+}
+```
+## 12. 光控声音实验
+```arduino
+int buzzer=9;
+void setup() {
+  pinMode(buzzer,OUTPUT);
+}
+
+void loop() {
+  digitalWrite(buzzer,HIGH);
+  delay(100);
+  digitalWrite(buzzer,LOW);
+  delay(100);
+}
+```
+## 13. RGB LED实验
+```arduino
+int redPin = 11;
+int greenPin = 10;
+int bluePin = 9;
+ 
+void setup()
+{
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);  
+}
+ 
+void loop()
+{
+  setColor(255, 0, 0);  // 红色
+  delay(1000);
+  setColor(0, 255, 0);  // 绿色
+  delay(1000);
+  setColor(0, 0, 255);  // 蓝色
+  delay(1000);
+  setColor(255, 255, 0);  // 黄色
+  delay(1000);  
+  setColor(80, 0, 80);  // 紫色
+  delay(1000);
+  setColor(0, 255, 255);  // 浅绿色
+  delay(1000);
+}
+ 
+void setColor(int red, int green, int blue)
+{
+  analogWrite(redPin, 255-red);
+  analogWrite(greenPin, 255-green);
+  analogWrite(bluePin, 255-blue);  
+}
+```
+## 14
+## 15

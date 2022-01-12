@@ -465,3 +465,112 @@ public class 增强for循环 {
           break outer    //跳到outer的语句
           continue outer //跳到outer语句
 ```
+
+## 4. 方法
+### 4.1 方法？
+* 方法与其他语言函数类似
+* 方法是解决一类问题步骤的有序集合
+* 方法包含在类或对象中
+* 方法在程序中创建，在其他地方被引用
+
+### 4.2 方法定义
+定义语法：
+```java
+修饰符 返回值类型 方法名(参数类型 参数名){
+    执行代码
+    return 返回值;
+}
+```  
+
+例：
+```java
+package top.cxy96.method;
+
+public class Demo1 {
+    // main方法
+    public static void main(String[] args) {
+        int sum=add(20,30);
+        System.out.println(sum);
+
+        System.out.println(max(20,30));
+    }
+
+    // 定义一个加法函数
+    public static int add(int a,int b){
+        return a+b;
+    }
+
+    // 定义比较大小函数
+    public static boolean max(int a,int b){
+        if(a>b) return true;
+        else return false;
+    }
+}
+
+```
+### 4.3 方法重载
+重载规则：
+*  方法名称相同
+*  参数列表必须不同（个数不同、类型不同、参数排列顺序不同）
+*  方法返回类型可以相同也可以不相同
+*  仅仅返回类型不同不是方法的重载
+
+例：
+```java
+package top.cxy96.method;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        max(10,20);       //20
+
+        max(10.0,20.0);   //20.0
+    }
+    public static void max(int a,int b){
+        if(a>b) System.out.println("大的是："+a);
+        else System.out.println("大的是："+b);
+    }
+    public static void max(double a,double b){
+        if(a>b) System.out.println("大的是："+a);
+        else System.out.println("大的是："+b);
+    }
+}
+```
+### 4.4 命令行传参
+```
+package top.cxy96.method;
+
+public class Demo3 {
+    public static void main(String[] args) {
+        // args.length args数组的元素个数
+        for(int i=0;i< args.length;i++){
+            System.out.println("args["+i+"]："+args[i]);
+        }
+    }
+}
+```
+命令行编译执行(执行时要从包根目录开始执行)：
+
+![Demo3](C:/Users/honor/Downloads/Demo3.png)
+
+## 4.5 可变参数
+* JDK1.5开始，Java支持传递同类型的可变参数
+* 指定参数类型后加一个省略号(...)
+* 一个方法只能指定一个可变参数，必须是方法的最后一个参数。
+
+例：
+```java
+package top.cxy96.method;
+
+public class Demo4 {
+    public static void main(String[] args) {
+        Demo4 demo4 = new Demo4();
+        demo4.test(1,2,3,4,5,6,7,8);
+        // 输出 2 3 4 5 6 7 8
+    }
+    public void  test(int x,int... y){
+        for(int i=0;i<y.length;i++){
+            System.out.println(y[i]);
+        }
+    }
+}
+```
