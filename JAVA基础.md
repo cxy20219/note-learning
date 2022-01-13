@@ -267,7 +267,7 @@ public class Demo2 {
 * @return 返回值情况
 * @throws 异常抛出情况
 
-[API帮助文档](https://www.oracle.com/cn/java/technologies/java-se-api-doc.html)
+[API帮助文档](https://www.matools.com/api/java8)
 ```java
 package top.base;
 
@@ -550,7 +550,7 @@ public class Demo3 {
 ```
 命令行编译执行(执行时要从包根目录开始执行)：
 
-![Demo3](C:/Users/honor/Downloads/Demo3.png)
+![Demo3](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo3.png)
 
 ## 4.5 可变参数
 * JDK1.5开始，Java支持传递同类型的可变参数
@@ -574,3 +574,201 @@ public class Demo4 {
     }
 }
 ```
+## 5. 数组
+### 5.1 数组创建
+* 数组声明  
+```java
+类型[] 变量名 //首选`
+类型 变量名[] //c c++风格
+```
+* new操作符创建
+```java
+变量名 = new 类型[]
+```
+* 获取数组长度
+`数组名.length`
+
+例:
+```java
+package top.cxy96.arry;
+
+public class Demo1 {
+    public static void main(String[] args) {
+        int[] arr1;    // 首选方法
+        int arr2[];    // c、c++风格
+
+        arr1 = new int[10]; // new操作符创建数组
+        for(int i=0;i<3;i++){
+            arr1[i] = i;
+        }
+        for(int i=0;i<arr1.length;i++){
+            System.out.println(arr1[i]);
+        }
+        
+        int[] arr3={1,2,3};
+        int[] arr4=new int[10];  // 声明与创建一块 (动态初始化) 默认值为0
+    }
+}
+```
+数组特点:
+* 数组长度确定,不可以改变
+* 元素必须是相同类型
+* 元素可以是任何数据类型
+* 数组本身就是对象,Java对象保存在堆中
+
+### 5.2 数组使用
+```java
+package top.cxy96.arry;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        // jdk1.5 没有下标
+        for (int i : arr) {
+            System.out.println(i);   // 输出 1 2 3 4 5
+        }
+        printArray(arr);
+        int[] arr2=reverse(arr);
+        printArray(arr2);
+    }
+    //打印数组元素
+    public static void printArray ( int[] arr){
+        for (int i = 0; i < arr.length; i++) {
+                System.out.print(arr[i] + " ");
+            }
+        }
+    // 反转数组
+    public static  int[] reverse(int[] arr){
+        int [] result = new int[arr.length];
+        for(int i = 0,j = result.length-1;i<arr.length;i++,j--){
+            result[i]=arr[j];
+        }
+        return result;
+    }
+}
+```
+### 5.3 多维数组
+```java
+package top.cxy96.arry;
+
+public class Demo3 {
+    public static void main(String[] args) {
+        int[][] arr1 = {{1,2,3},{4,5,6}};
+        int[][] arr2 = new int[2][3];
+        for(int i=0;i<arr1.length;i++){
+            for(int j=0;j<arr1[i].length;j++){
+                    System.out.print(arr1[i][j]+"\t");
+            }
+                System.out.println();
+        }
+    }
+}
+```
+### 5.4 Arrys使用
+更多使用参考:[API文档](https://www.matools.com/api/java8)
+```java
+package top.cxy96.arry;
+
+import java.util.Arrays;
+
+public class Demo4 {
+    public static void main(String[] args) {
+        int[] a ={1,2,5,3,7,5,6,9};
+        // 调用Arrays里面的方法打印数组
+        System.out.println(Arrays.toString(a));  // 输出[1, 2, 5, 3, 7, 5, 6, 9]
+
+        // 调用Arrays里面的方法进行排序
+        Arrays.sort(a);
+        System.out.println(Arrays.toString(a));   // 输出[1, 2, 3, 5, 5, 6, 7, 9]
+
+        // 数组填充
+        Arrays.fill(a,0);
+        System.out.println(Arrays.toString(a));   // 输出[0, 0, 0, 0, 0, 0, 0, 0]
+        Arrays.fill(a,2,4,2);
+        System.out.println(Arrays.toString(a));   // 输出[0, 0, 2, 2, 0, 0, 0, 0]
+    }
+}
+```
+### 5.5 稀疏数组
+* 压缩空间,减小空间使用  
+三元表示法:  
+```java
+总行数 总列数   值的个数
+几行   几列     非零元素的值
+几行   几列     非零元素的值
+...    ...      .......
+```
+例:
+```java
+package top.cxy96.arry;
+
+import java.util.Arrays;
+
+public class Demo5 {
+    public static void main(String[] args) {
+        //  1. 创建一个而二维数组 11*11  0:没有棋子 1:黑棋 2.:白棋
+        int [][] array1=new int[11][11];
+        array1[1][2] = 1;
+        array1[2][3] = 2;
+        // 输出原始的数组
+        for (int[] ints : array1) {
+            for (int anInt : ints) {
+               System.out.print(anInt+"\t");
+            }
+            System.out.println();
+        }
+        // 转换为稀疏矩阵保存
+        // 获取有效值的个数
+        int sum =0;
+        for(int i=0;i<11;i++){
+            for(int j=0;j<11;j++){
+                if (array1[i][j]!=0){
+                    sum++;
+                }
+            }
+        }
+        System.out.println("有效值个数："+sum);
+        // 2.创建一个稀疏数组的数组
+        int[][] array2=new int[sum+1][3];
+        array2[0][0] = 11;
+        array2[0][1] = 11;
+        array2[0][2] = sum;
+        // 遍历数组，将非零的值，存放到稀疏数组中
+        int count = 0;
+        for(int i=0;i<array1.length;i++){
+            for(int j=0;j<array1[i].length;j++){
+                if(array1[i][j]!=0){
+                    count++;
+                    array2[count][0] = i;
+                    array2[count][1] = j;
+                    array2[count][2] = array1[i][j];
+                }
+            }
+        }
+        // 输出稀疏数组
+        for (int[] ints : array2) {
+            for (int anInt : ints) {
+                System.out.print(anInt+"\t");
+            }
+            System.out.println();
+        }
+
+        //还原稀疏矩阵
+        int[][] array3=new int[array2[0][0]][array2[0][1]];
+        for(int i=1;i<array2.length;i++){
+            array3[array2[i][0]][array2[i][1]]=array2[i][2];
+        }
+        // 输出原数组
+        for (int[] ints : array3) {
+            for (int anInt : ints) {
+                System.out.print(anInt+"\t");
+            }
+            System.out.println();
+        }
+    }
+}
+
+```
+![输出结果](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo4.png)
+## 6. 面向对象
+## 7. 异常
