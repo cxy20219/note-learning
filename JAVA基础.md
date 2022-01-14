@@ -771,4 +771,86 @@ public class Demo5 {
 ```
 ![输出结果](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo4.png)
 ## 6. 面向对象
+### 6.1 面向对像
+三大特性：  
+* 封装性
+* 继承性
+* 多态性
+
+### 6.2 对象的创建
+定义一个类：
+```java
+package top.cxy96.oop;
+
+public class Person {
+    // 属性 字段
+    String name;
+    int age;
+
+    // 非静态方法 不能直接使用
+    public void say(){
+        System.out.println("你好!我是"+name+",今年"+age+"岁");
+        }
+}
+
+```
+new 关键字创建对象
+```java
+package top.cxy96.oop;
+
+public class Demo1 {
+    // main方法
+    public static void main(String[] args) {
+        // new实例化对象
+        // 对象类型 对象名 = 对象值;
+        Person p1 = new Person();
+        p1.name="张三";
+        p1.age = 18 ;
+        p1.say();      // 输出：你好!我是张三今年18岁
+    }
+}
+```
+### 6.3 构造器
+方法名与类名相同：
+定义一个类：
+```java
+package top.cxy96.oop;
+
+public class Student {
+    String name;
+    int age;
+    // 构造函数 实列化对象时时给一个初始值
+    // 无参构造
+    public Student (){
+        this.name = "zhangsan";
+    }
+    // 有参构造
+    public Student(String na){
+            this.name = na;
+    }
+    public void say() {
+        System.out.println("你好!我是" + name);
+    }
+}
+```
+```java
+package top.cxy96.oop;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        Student s1 = new Student();
+        s1.say();  // 输出：你好!我是zhangsan
+        Student s2 = new Student("狂神");
+        s2.say();  // 输出：你好!我是狂神
+    }
+}
+```
+快捷键 ： Alt + insert(ins) 快速生成构造器
+### 6.4 封装
+1. 提高程序的安全性，保护数据
+2. 隐藏代码细节
+3. 统一接口
+4. 增加可维护性
+### 6.5 继承
+
 ## 7. 异常
