@@ -851,6 +851,170 @@ public class Demo2 {
 2. 隐藏代码细节
 3. 统一接口
 4. 增加可维护性
+
+例：
+```java
+package top.cxy96.oop.Demo3;
+
+public class Person {
+    // 属性私有
+    private String name;  // 名字
+    private int age;      // 年龄
+    private char sex;     // 性别
+
+    // 提供操作属性的方法
+    public void setName(String n){
+        this.name=n;
+    }
+    public String getName(){
+        return this.name;
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo3;
+
+import static java.lang.System.out;
+
+public class Application {
+    public static void main(String[] args) {
+        Person s1 = new Person();
+        s1.setName("张三");
+        String name = s1.getName();
+        out.println(name);
+    }
+}
+```
 ### 6.5 继承
+* **extends** 意思“扩展”，子类是父类的扩展
+* Java中只有单继承(只能有一个父类)
+* object类 所有的类都直接或间接的继承objct类
+* super  可以调用父类的属性和方法（私有无法调用）
+
+super 注意事项：  
+1. super调用父类的构造方法，必须在构造方法的第一个
+2. super必须只能出现在子类的方法或构造方法中
+3. super和this不能同时调用构造方法
+
+四种权限:
+1. public
+2. private
+3. protect
+4. default
+> IDEA快捷键 ctr + h 查看类的结构
+
+示例代码：
+```
+javapackage top.cxy96.oop.Demo4;
+
+public class Person {
+    private int money = 1_000_000;
+    protected String name = "Person";
+
+    public void say(){
+        System.out.println("Person");
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo4;
+
+public class Student extends Person{
+    public Student(){
+        // 隐藏代码 默认调用父类无参构造
+        super();  // 调用父类的构造器必须在子类构造器第一行
+    }
+    private String name = "stuedent";
+    public void say(){
+        System.out.println("Student");
+    }
+    public void test1(String name){
+        System.out.println(name);      // 输出inName
+        System.out.println(this.name); // 输出stuedent
+        System.out.println(super.name);// 输出Person
+    }
+    public void test2(){
+        say();       // 当前类的方法
+        this.say();  // 当前类的方法
+        super.say(); // 父类的方法
+    }
+
+}
+```
+```java
+package top.cxy96.oop.Demo4;
+
+public class Teacher extends Person{
+}
+```
+```java
+package top.cxy96.oop.Demo4;
+
+public class Applications {
+    public static void main(String[] args) {
+        Student s=new Student();
+        // 调用父类的方法
+        s.say();
+        // 子类不能调用父类私有权限的属性或方法
+        // s.money
+        s.test1("inName");
+    }
+}
+```
+### 6.6 方法重写
+* 方法名、参数列表相同
+* 非静态方法才可以重写
+* 修饰符：范围可以扩大但不能缩小  
+public>protected>Default>private
+* 抛出异常：范围，可以被缩小，但不能扩大
+```java
+package top.cxy96.oop.Demo5;
+
+public class B {
+    public static void test1(){
+        System.out.println("B->test");
+    }
+    public void test2(){
+        System.out.println("B->test");
+    }
+}
+
+```
+```java
+package top.cxy96.oop.Demo5;
+
+public class A extends B{
+    public static void test1(){
+        System.out.println("A->test");
+    }
+
+    // alt + ins  override重写
+    @Override   // 注解有功能的注解
+    public void test2() {
+        System.out.println("A->test");
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo5;
+
+public class Appliction {
+    public static void main(String[] args) {
+        A a1 = new A();
+        a1.test1();   // 输出A->test
+
+        // 父类的引用指向子类
+        B b1 = new A();
+        b1.test1();   // 输出B->test
+
+        A a2 = new A();
+        a2.test2();   // 输出A->test
+
+        B b2 = new A();
+        b2.test2();   // 输出A->test
+    }
+}
+```
+### 6.7 多态
 
 ## 7. 异常
