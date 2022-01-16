@@ -1016,5 +1016,222 @@ public class Appliction {
 }
 ```
 ### 6.7 多态
+```java
+package top.cxy96.oop.Demo6;
+
+public class Appliction {
+    public static void main(String[] args) {
+        // 一个对象实际类型是确定的
+        // new Student();
+        // new Person();
+
+        // 可以指向的类型不确定   父类的引用指向子类
+        Student s1 = new Student();
+        Person s2 = new Student();
+        Object s3 = new Student();
+        
+        // 对象执行哪些方法主要看对象左边类型 
+        // 子类重写了父类的方法执行子类的方法
+        // 类型转换异常  ClassCastException
+        // 父类引用指向子类对象 Father f1 = new Son();
+        // static 与类相关 与实例无关
+    }
+}
+```
+**instanceof** 关键字，判断是不是父类
+```java
+package top.cxy96.oop.Demo7;
+
+public class Appliction {
+    public static void main(String[] args) {
+        // Object -> Person -> Student
+        // Object -> Person -> Teacher
+        // Object -> String
+        Object object = new Student();
+        System.out.println(object instanceof Student);   // true
+        System.out.println(object instanceof Person);    // true
+        System.out.println(object instanceof Object);    // true
+        System.out.println(object instanceof String);    // false
+        System.out.println(object instanceof Tecaher);   // false
+    }
+}
+```
+类型转换：
+```java
+package top.cxy96.oop.Demo7;
+
+public class Person {
+}
+```
+```java
+package top.cxy96.oop.Demo7;
+
+public class Student extends Person {
+    public void run(){
+        System.out.println("学生run");
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo7;
+
+
+public class Appliction {
+    public static void main(String[] args) {
+        // 类型之间的转化(强转)：
+        // 高  ->   低
+        Person s1 = new Student();
+        // 不能直接调用子类的方法 要先转换为子类
+        // s1.run() x
+        ((Student)s1).run();
+        
+        // 子类转换为父类 自动转换 
+        // 子类转换为父类 可能会丢失本来的一些方法
+    }
+}
+```
+### 6.8  static 关键字
+被final修饰后的类不能被继承
+```java
+package top.cxy96.oop.Demo8;
+
+
+public class Student {
+    private static int age;   // 静态的变量   能被类实例共享
+    private double score;     // 非静态的变量
+
+    // 非静态方法
+    public void run(){
+
+    }
+    // 静态方法 与类一块加载
+    public static void go(){
+
+    }
+    public static void main(String[] args) {
+        Student s1 = new Student();
+
+        System.out.println(Student.age);
+        System.out.println(s1.age);
+        // System.out.println(Student.score);
+
+        Student.go();
+        s1.run();
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo8;
+
+public class Person {
+    {
+        // 代码块 (匿名代码块)
+        System.out.println("匿名代码块");
+    }
+    static {
+        // 静态代码块
+        System.out.println("静态代码块");
+    }
+    public Person(){
+        System.out.println("构造方法");
+    }
+
+    public static void main(String[] args) {
+        // 静态代码只会执行一次
+        // 一般用来赋一些初始值
+        Person p1 =new Person();
+//        输出：
+//        静态代码块
+//        匿名代码块
+//        构造方法
+        Person p2 = new Person();
+//        输出
+//        匿名代码块
+//        构造方法
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo8;
+// 静态导入包  ()
+import static java.lang.Math.random;
+public class Test {
+    public static void main(String[] args) {
+        // 未导包前
+        System.out.println(Math.random());
+        // 导包后
+        System.out.println(random());
+    }
+}
+```
+### 6.9 抽象类与接口
+```java
+package top.cxy96.oop.Demo9;
+
+// 抽象类的方法需要子类重写实现  (extend：单继承)（接口可以多继承）
+// 抽象类  不能创建对象
+public abstract class Action {
+    // 抽象方法 只有方法名字没有方法实现
+    public abstract void doSomthing();
+}
+
+```
+#### 接口
+```java
+package top.cxy96.oop.Demo9;
+
+public interface UserServer {
+    // 接口只有方法的定义 没有实现
+    // 接口中的所有定义都是抽象的
+    public abstract void run();
+
+    // 默认是抽象的
+    void go();
+    
+    // 接口定义的属性都是常量
+    public int Age = 80;
+
+
+    void add(String name);
+    void delete(String name);
+    void update(String name);
+    void query(String name);
+
+}
+```
+```java
+package top.cxy96.oop.Demo9;
+
+// 类 可以实现接口 implements 接口
+// 实现接口的类，就需要重写接口的方法
+// 利用接口实现多继承
+public class UserServermpl implements UserServer,TimeServer{
+    @Override
+    public void add(String name) {
+
+    }
+
+    @Override
+    public void delete(String name) {
+
+    }
+
+    @Override
+    public void update(String name) {
+
+    }
+
+    @Override
+    public void query(String name) {
+
+    }
+
+    @Override
+    public void timeer() {
+
+    }
+}
+```
+
 
 ## 7. 异常
