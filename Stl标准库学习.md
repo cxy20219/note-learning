@@ -131,6 +131,12 @@ void test01(){
 		cout<<endl;
 	} 
 }
+void test02(){
+	// 快速创建二维数组 
+	vector <vector<int> > v(12,vector<int>(13));
+	cout<<v.size()<<endl;
+	cout<<v[1].size();
+} 
 int main(){
 	test01();
 	return 0;

@@ -1232,6 +1232,145 @@ public class UserServermpl implements UserServer,TimeServer{
     }
 }
 ```
+### 6.10 内部类
+```java
+package top.cxy96.oop.Demo10;
 
+public class Outer {
+    private int id = 10;
+    public void out(){
+        System.out.println("外部类的方法");
+    }
+    public class Inner{
+        public void in(){
+            System.out.println("内部类的方法");
+        }
+        // 获得外部类的私有属性
+        public void getId(){
+            System.out.println(id);
+        }
+    }
+    // 静态内部类
+    public static class Inner1{};
+    
+    // 局部内部类
+    public void method(){
+        class Inner2{};
+    }
+}
 
+// 一个Java类中可以有多个class类，但是只能有一个public class
+class A{
+    public static void main(String[] args) {
+        
+    }
+}
+```
+```java
+package top.cxy96.oop.Demo10;
+
+public class Appliction {
+    public static void main(String[] args) {
+        // 实例化外部类
+        Outer outer = new Outer();
+
+        // 通过外部类来实例化内部类
+        Outer.Inner inner = outer.new Inner();
+    }
+}
+```
 ## 7. 异常
+* Java 把异常当作对象处理，并定义一个基类java.lang.Throwable作为所有异常的超类
+* Java API中定义了许多异常类，分为两大类错误Error和异常Exception
+### 7.1 Error 和 Exception
+* 在Exception分支中有一个重要的子类Exception(运行时异常)
+  * ArrayIndexOutOfBoundsException(数组下标越界)
+  * NullPointerException(空指针异常)
+  * ArithmeticException(算术异常)
+  * MissingResourceException(丢失资源)
+  * ClassNotFoundException(找不到类)
+* Error出现时Java(JVM)一般会终止线程;Exception通常情况下可以被程序处理,并且程序中应尽可能的去处理这些异常
+
+### 7.2 捕获和抛出异常
+IDEA快捷键；ctrl + Alt + t
+选定指定执行语句自动生成代码
+
+```java
+package top.cxy96.exception;
+
+public class Test {
+    public static void main(String[] args) {
+        int a = 1;
+        int b = 0;
+        
+        
+        
+        try {   // 出现异常可以捕获            // 未出现异常时执行
+            
+            if(b==0) {  // 主动抛出异常
+                throw new ArithmeticException();
+            }
+            System.out.println(a / b);
+        } catch (ArithmeticException e) {     // 出现异常时执行
+            System.out.println("程序出现异常");
+            e.printStackTrace();             // 打印错误的栈信息
+        } catch (Throwable t) {
+            System.out.println("程序出现异常");// 最高异常Throwable
+        } finally {
+            System.out.println("finnaly");   // 无论是否出现异常都会执行
+        }
+    }
+    // 假设方法处理不了异常，方法上抛出异常
+    public void test(int a,int b) throws ArithmeticException{
+        if(b==0){
+            throw new ArithmeticException();  //主动抛出异常
+        }
+        System.out.println(a/b);
+    }
+}
+```
+### 7.3 自定义异常
+自定义异常步骤：
+1. 创建并定义异常类
+2. 在方法中通过throw关键字抛出异常对象
+3. 如果在方法内处理异常可以同构 try—catch 语句捕获处理异常；否则在方法处通过throws关键字指明要抛出给方法调用者的异常。
+4. 出现异常方法的调用者中捕获处理异常
+
+```java
+package top.cxy96.exception.Demo;
+
+// 自定义异常类
+public class MyException extends Exception{
+    // 传递数字>10 抛出异常
+    private int detail;
+
+    public MyException(int a){
+        this.detail = a;
+    }
+    // toString： 异常的打印信息
+    @Override
+    public String toString() {
+        return "MyException{" + detail + '}';
+    }
+}
+```
+```java
+package top.cxy96.exception.Demo;
+
+public class Test {
+    // 可能存在异常的方法
+    static void test(int a) throws MyException{
+        if(a>10){
+            throw new MyException(a);  // 抛出
+        }
+        System.out.println("OK");
+    }
+    public static void main(String[] args){
+        try {
+            test(11);
+        }catch (MyException e){
+            System.out.println("MyException"+e);    // 输出：MyExceptionMyException{11}
+        }
+    }
+}
+```
