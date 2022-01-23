@@ -129,4 +129,102 @@ public class TestPanel {
 ```  
 运行结果：
 ![Demo1](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Java_GUI_Demo2.png)  
+3. 布局管理器
+* 流式布局
+```java
+package top.cxy96.java_GUI.lesson1;
+
+import java.awt.*;
+
+public class TestFlow {
+    public static void main(String[] args) {
+        Frame frame = new Frame();
+
+        //　组件--按钮
+        Button button1=new Button("buttton1");
+        Button button2=new Button("buttton2");
+        Button button3=new Button("buttton3");
+
+        // 设为流式布局
+        // 默认居中
+        // frame.setLayout(new FlowLayout());
+        frame.setLayout(new FlowLayout(FlowLayout.LEFT));  // 居左
+
+        frame.setSize(200,200);
+
+        // 将按钮添加上去
+        frame.add(button1);
+        frame.add(button2);
+        frame.add(button3);
+
+        // 设置可见
+        frame.setVisible(true);
+    }
+}
+```  
+运行结果：
+![Demo3](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo3.png)
+* 东西南北中
+```java
+package top.cxy96.java_GUI.lesson1;
+
+import java.awt.*;
+
+public abstract class TestBorderLayout {
+    public static void main(String[] args) {
+        Frame frame = new  Frame("TestBorderLayout");
+
+        Button east = new Button("East");
+        Button west = new Button("West");
+        Button south = new Button("South");
+        Button north = new Button("North");
+        Button center = new Button("Center");
+
+        frame.add(east,BorderLayout.EAST);
+        frame.add(west,BorderLayout.WEST);
+        frame.add(north,BorderLayout.NORTH);
+        frame.add(south,BorderLayout.SOUTH);
+        frame.add(center,BorderLayout.CENTER);
+
+        frame.setSize(200,200);
+        frame.setVisible(true);
+    }
+}
+```  
+![Demo4](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo4.png)
+* 表格布局
+```java
+package top.cxy96.java_GUI.lesson1;
+
+import java.awt.*;
+
+public class TestGrid {
+    public static void main(String[] args) {
+        Frame frame = new Frame("TestGridLayout");
+
+        Button bt1 = new Button("button1");
+        Button bt2 = new Button("button2");
+        Button bt3 = new Button("button3");
+        Button bt4 = new Button("button4");
+        Button bt5 = new Button("button5");
+        Button bt6 = new Button("button6");
+
+        frame.setLayout(new GridLayout(3,2));
+
+        frame.add(bt1);
+        frame.add(bt2);
+        frame.add(bt3);
+        frame.add(bt4);
+        frame.add(bt5);
+        frame.add(bt6);
+
+        frame.pack(); // Java函数 自动布局
+        frame.setVisible(true);
+
+    }
+}
+```  
+运行结果： 
+![Demo5](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo5.png)
+ 
 ## 3. Swing
