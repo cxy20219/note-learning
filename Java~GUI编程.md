@@ -227,4 +227,356 @@ public class TestGrid {
 运行结果： 
 ![Demo5](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo5.png)
  
-## 3. Swing
+ 
+### 综合案列
+效果展示：  
+![Demo6](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo6.png)  
+代码：  
+```java
+package top.cxy96.java_GUI.lesson1;
+
+import java.awt.*;
+
+public class Demo {
+    public static void main(String[] args) {
+        // 大的窗口
+        Frame frame = new Frame();
+        // 两行一列
+        frame.setLayout(new GridLayout(2,1));
+        // 设置大小
+        frame.setSize(400,300);
+        // 设置位置
+        frame.setLocation(300,400);
+        // 设置背景颜色
+        frame.setBackground(Color.black);
+        // 设置可见
+        frame.setVisible(true);
+
+        // 4个面板
+        Panel p1 = new Panel(new BorderLayout());
+        Panel p2 = new Panel(new GridLayout(2,1));
+        Panel p3 = new Panel(new BorderLayout());
+        Panel p4 = new Panel(new GridLayout(2,2));
+
+        // 按钮
+        p1.add(new Button("East-1"),BorderLayout.EAST);
+        p1.add(new Button("West-1"),BorderLayout.WEST);
+        p2.add(new Button("p2-btn-1"));
+        p2.add(new Button("p2-btn-2"));
+
+        // 将表格布局放在中间
+        p1.add(p2,BorderLayout.CENTER);
+
+        // 按钮
+        p3.add(new Button("East-2"),BorderLayout.EAST);
+        p3.add(new Button("West-2"),BorderLayout.WEST);
+        for (int i = 0; i < 4; i++) {
+            p4.add(new Button("p4-btn-"+i));
+        }
+
+        // 将表格布局放在中间
+        p1.add(p2,BorderLayout.CENTER);
+        p3.add(p4,BorderLayout.CENTER);
+
+        // 将面板放在frame里面
+        frame.add(p1);
+        frame.add(p3);
+    }
+}
+```
+## 3. 事件监听
+### 3.1 按钮监听事件
+代码：  
+```java
+package top.cxy96.java_GUI.lesson2;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class TestAction {
+    public static void main(String[] args) {
+        // 按下按钮发生事件
+        Frame frame = new Frame();
+        Button button = new Button("clik");
+
+        // 构造一个ActionListener
+        MyActionListener myActionListener = new MyActionListener();
+
+        button.addActionListener(myActionListener);
+
+        frame.add(button,BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setVisible(true);
+
+        // 关闭窗口
+        windowColse(frame);
+    }
+    // 关闭窗体事件
+    private static void windowColse(Frame frame){
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+}
+class MyActionListener implements ActionListener{
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 点击按钮时打印aaa
+        System.out.println("aaa");
+        // 获取按钮上的信息
+        System.out.println("按钮："+e.getActionCommand());
+    }
+}
+```
+
+### 3.2. 输入框监听事件
+代码：
+```java
+package top.cxy96.java_GUI.lesson2;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TestText01 {
+    public static void main(String[] args) {
+        MyFrame myFrame = new MyFrame();
+    }
+}
+class MyFrame extends Frame{
+    public MyFrame(){
+        TextField textField = new TextField();
+        add(textField);
+
+        // 监听文本框输入的文字
+        MyActionListener2 myActionListener2 = new MyActionListener2();
+        // 按下Enter触发事件
+        textField.addActionListener(myActionListener2);
+
+        // 设置替换编码
+        textField.setEchoChar('*');
+        setVisible(true);
+        pack();
+
+    }
+}
+
+class MyActionListener2 implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 获得一些资源 , 返回一个对象 ，强转TextField
+        TextField field = (TextField)e.getSource();
+        String messge = field.getText();   // 获取输入框的文本
+        System.out.println(messge);
+
+        // 清空输入框的文本
+        field.setText(null);  // "" 或 null
+    }
+}
+```  
+### 3.3 简易计算器
+#### 实现代码
+```java
+package top.cxy96.java_GUI.lesson2;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SimpleCalculator {
+    public static void main(String[] args) {
+        Calculator calculator = new Calculator();
+    }
+}
+// 计算器类
+class Calculator extends Frame{
+    public Calculator(){
+        // 3个文本框
+        TextField textField1 = new TextField(10); // 字符数
+        TextField textField2 = new TextField(10); // 字符数
+        TextField textField3 = new TextField(20); // 字符数
+        
+        // 1个按钮
+        Button button = new Button("=");
+
+        button.addActionListener(new MyCalculatorListener(textField1,textField2,textField3));
+        // 一个标签
+        Label label = new Label("+");
+
+        // 布局
+        setLayout(new FlowLayout());
+
+        add(textField1);
+        add(label);
+        add(textField2);
+        add(button);
+        add(textField3);
+        
+        pack();
+        setVisible(true);
+    }
+}
+// 监听器类
+class MyCalculatorListener implements ActionListener{
+    // 获取三个变量
+    private TextField num1,num2,num3;
+    public MyCalculatorListener(TextField num1,TextField num2,TextField num3){
+        this.num1 = num1;
+        this.num2 = num2;
+        this.num3 = num3;
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 获得加数与被加数
+        int n1 = Integer.parseInt(num1.getText());
+        int n2 = Integer.parseInt(num2.getText());
+
+        // 将运算后的值放到第三个框
+        num3.setText(""+(n1+n2));
+
+        // 清除前两个框
+        num1.setText(null);
+        num2.setText(null);
+    }
+}
+```
+结果演示：
+![Demo7](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo7.png)  
+![Demo8](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo8.png)  
+
+#### 代码优化(组合类)
+```java
+package top.cxy96.java_GUI.lesson2;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SimpleCalculator {
+    public static void main(String[] args) {
+        new Calculator().loadFrame();
+    }
+}
+// 计算器类
+class Calculator extends Frame{
+    // 属性
+    TextField textField1,textField2,textField3;
+
+    // 方法
+    public void loadFrame() {
+        // 3个文本框
+        textField1 = new TextField(10); // 字符数
+        textField2 = new TextField(10); // 字符数
+        textField3 = new TextField(20); // 字符数
+
+        // 1个按钮
+        Button button = new Button("=");
+
+        button.addActionListener(new MyCalculatorListener(this));
+        // 一个标签
+        Label label = new Label("+");
+
+        // 布局
+        setLayout(new FlowLayout());
+
+        add(textField1);
+        add(label);
+        add(textField2);
+        add(button);
+        add(textField3);
+
+        pack();
+        setVisible(true);
+    }
+}
+// 监听器类
+class MyCalculatorListener implements ActionListener{
+    // 获取计算器对象  在一个类中组合另一个类
+    Calculator calculator = null;
+    public MyCalculatorListener(Calculator calculator){
+        this.calculator = calculator;
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 获得加数与被加数
+        int n1 = Integer.parseInt(calculator.textField1.getText());
+        int n2 = Integer.parseInt(calculator.textField2.getText());
+
+        // 将运算后的值放到第三个框
+        calculator.textField3.setText(""+(n1+n2));
+
+        // 清除前两个框
+        calculator.textField1.setText(null);
+        calculator.textField2.setText(null);
+    }
+}
+```
+#### 代码优化(类部类)
+```java
+package top.cxy96.java_GUI.lesson2;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SimpleCalculator {
+    public static void main(String[] args) {
+        new Calculator().loadFrame();
+    }
+}
+// 计算器类
+class Calculator extends Frame{
+    // 属性
+    TextField textField1,textField2,textField3;
+
+    // 方法
+    public void loadFrame() {
+        // 3个文本框
+        textField1 = new TextField(10); // 字符数
+        textField2 = new TextField(10); // 字符数
+        textField3 = new TextField(20); // 字符数
+
+        // 1个按钮
+        Button button = new Button("=");
+
+        button.addActionListener(new MyCalculatorListener());
+        // 一个标签
+        Label label = new Label("+");
+
+        // 布局
+        setLayout(new FlowLayout());
+
+        add(textField1);
+        add(label);
+        add(textField2);
+        add(button);
+        add(textField3);
+
+        pack();
+        setVisible(true);
+    }
+    // 监听器类
+    private class MyCalculatorListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // 获得加数与被加数
+            int n1 = Integer.parseInt(textField1.getText());
+            int n2 = Integer.parseInt(textField2.getText());
+
+            // 将运算后的值放到第三个框
+            textField3.setText(""+(n1+n2));
+
+            // 清除前两个框
+            textField1.setText(null);
+            textField2.setText(null);
+        }
+    }
+}
+```
