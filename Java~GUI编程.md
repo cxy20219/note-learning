@@ -447,7 +447,7 @@ class MyCalculatorListener implements ActionListener{
     }
 }
 ```
-结果演示：
+结果演示：  
 ![Demo7](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo7.png)  
 ![Demo8](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo8.png)  
 
@@ -577,6 +577,192 @@ class Calculator extends Frame{
             textField1.setText(null);
             textField2.setText(null);
         }
+    }
+}
+```
+### 3.4 画笔
+代码：  
+```java
+package top.cxy96.java_GUI.lesson3;
+
+import java.awt.*;
+
+public class TestPaint {
+    public static void main(String[] args) {
+        new MyPaint().loadFrame();
+    }
+}
+class MyPaint extends Frame{
+    public void loadFrame(){
+        setBounds(200,200,600,500);
+        setVisible(true);
+    }
+    // 画笔
+    @Override
+    public void paint(Graphics g) {
+        // super.paint(g);
+        // 画笔颜色
+        g.setColor(Color.red);
+
+        // 画
+        g.drawOval(100,100,100,100); // 圆
+
+        g.fillOval(200,200,100,100); // 实心圆
+
+        g.setColor(Color.green);
+        g.fillRect(100,300,100,100); // 矩形
+        
+        // 画笔用完还原到最初颜色
+        
+    }
+}
+```  
+结果演示：  
+![Demo9](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo9.png)  
+
+### 3.5 鼠标监听
+代码：  
+```java
+package top.cxy96.java_GUI.lesson3;
+
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class TestMouseListener {
+    public static void main(String[] args) {
+        new MyFrame("画画");
+    }
+}
+
+class MyFrame extends Frame{
+    // 画画需要画笔，首先监听当前的位置，需要集合来存储这个点
+    ArrayList points;
+    public MyFrame(String title){
+        super(title);
+        setBounds(200,200,600,500);
+
+        // 存储鼠标点击的点
+        points = new ArrayList<>();
+        // 鼠标监听器
+        this.addMouseListener(new MyMouseListener());
+
+        setVisible(true);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        // 画画监听鼠标的事件
+        Iterator iterator = points.iterator();
+        while (iterator.hasNext()){
+            Point point = (Point) iterator.next();
+            g.setColor(Color.red);
+            g.fillOval(point.x,point.y,10,10);
+        }
+    }
+
+    // 添加一个点在界面上
+    public void addPoint(Point point){
+        points.add(point);
+    }
+    // 适配器模式
+    private  class MyMouseListener extends MouseAdapter {
+        // 鼠标 按下，弹起，按住不放
+        @Override
+        public void mousePressed(MouseEvent e) {
+            MyFrame myFrame = (MyFrame) e.getSource();
+
+            myFrame.addPoint(new Point(e.getX(),e.getY()));
+
+            // 每次点击都需要重新画一遍
+            myFrame.repaint(); // 刷新
+        }
+    }
+}
+```
+结果演示：  
+![Demo10](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo10.png)  
+
+### 3.6 窗口监听
+```java
+package top.cxy96.java_GUI.lesson3;
+
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class TestWindow {
+    public static void main(String[] args) {
+        new WindowFrame();
+    }
+}
+
+class WindowFrame extends Frame{
+    public WindowFrame(){
+        setBounds(200,200,600,500);
+        setVisible(true);
+        // addWindowListener(new MyWindowListener());
+        addWindowListener(
+                // 匿名内部类
+                new WindowAdapter() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+                        System.out.println("窗口打开");
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                        System.out.println("窗口激活");
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        System.out.println("你点击了×");
+                    }
+                }
+        );
+    }
+    class MyWindowListener extends WindowAdapter{
+        @Override
+        public void windowClosing(WindowEvent e) {
+            setVisible(false);  // 隐藏窗口
+            System.exit(0);  // 正常退出
+        }
+    }
+}
+```
+### 3.7 键盘监听
+```java
+package top.cxy96.java_GUI.lesson3;
+
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class TestKeyLisenser {
+    public static void main(String[] args) {
+        new KeyFrame();
+    }
+}
+class KeyFrame extends Frame{
+    public KeyFrame(){
+        setBounds(200,200,600,500);
+        setVisible(true);
+
+        addKeyListener(new KeyAdapter() {
+            // 键盘按下
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // 获取键盘的码
+                int keyCode = e.getKeyCode();
+                System.out.println(keyCode);
+                if(keyCode == KeyEvent.VK_UP){
+                    System.out.println("按下上键");
+                }
+            }
+        });
     }
 }
 ```
