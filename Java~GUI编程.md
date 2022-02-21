@@ -766,3 +766,127 @@ class KeyFrame extends Frame{
     }
 }
 ```
+
+## 4. Swing
+
+### 4.1 窗口、面板
+代码：  
+```java
+package top.cxy96.java_GUI.lesson4;
+
+import javax.swing.*;
+
+public class JFrameDemo {
+    //init() 初始化
+    public void init(){
+        // 顶级窗口
+        JFrame frame = new JFrame("这是一个JFrame窗口");
+        frame.setVisible(true);
+        frame.setBounds(100,100,200,200);
+
+        // 设置文字 JLabel
+        JLabel jLabel = new JLabel("Java学习");
+        frame.add(jLabel);
+
+        // 容器实例化
+
+
+        // 关闭事件
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+    public static void main(String[] args) {
+        // 建立一个窗口
+        new JFrameDemo().init();
+
+    }
+}
+```
+结果：  
+![Demo11](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo11.png)
+
+==让文字居中==  
+代码：  
+```java
+package top.cxy96.java_GUI.lesson4;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class JFrameDemo2 {
+    public static void main(String[] args) {
+        new MyFrame().init();
+    }
+}
+class MyFrame extends JFrame{
+    public void init(){
+        this.setBounds(10,10,200,300);
+        this.setVisible(true);
+        JLabel jLabel = new JLabel("JavaGUI学习");
+        this.add(jLabel);
+
+        // 让文本标签居中 设置水平对齐
+        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // 获得一个容器
+        Container contentPane = this.getContentPane();
+        contentPane.setBackground(Color.BLUE);
+
+    }
+}
+```
+结果：   
+![Demo12](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo12.png)
+
+### 4.2 弹窗
+```java
+package top.cxy96.java_GUI.lesson4;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class DialogDemo extends JFrame {
+    public DialogDemo(){
+        this.setVisible(true);
+        this.setSize(700,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // JFrame 容器
+        Container container = this.getContentPane();
+        // 绝对布局
+        container.setLayout(null);
+
+        // 按钮
+        JButton jButton = new JButton("点击弹出对话窗");
+        jButton.setBounds(30,30,200,50);
+
+        // 点击按钮时，弹出弹窗
+        jButton.addActionListener(new ActionListener() {
+            //　监听器
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 弹窗
+                new MyDialogDemo();
+            }
+        });
+        container.add(jButton);
+    }
+    public static void main(String[] args) {
+        new DialogDemo();
+    }
+}
+// 弹窗窗口
+class MyDialogDemo extends JDialog{
+    public MyDialogDemo() {
+        this.setVisible(true);
+        this.setBounds(100,100,500,500);
+        // this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  // 默认有关闭事件
+
+        Container contentPane = this.getContentPane();
+        contentPane.setLayout(null);
+
+        contentPane.add(new Label("hello"));
+    }
+}
+```
