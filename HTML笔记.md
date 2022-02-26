@@ -1,4 +1,4 @@
-## 1. 初识HTML
+## 01. 初识HTML
 >Hyper Text Markup Language（超文本标记语言）
 主题框架：
 ```html
@@ -34,10 +34,11 @@
 </html>
 ```
 结果展示：  
+
 ![Demo1](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_HTML_Demo1.png) 
 ---
 
-## 2. 基本标签
+## 02. 基本标签
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -81,7 +82,7 @@
 
 ![Demo2](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_HTML_Demo2.png)
 
-## 图像标签
+## 03. 图像标签
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -106,7 +107,7 @@
 </html>
 ```
 
-## 超链接标签
+## 04. 超链接标签
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -147,3 +148,185 @@
     </body>
 </html>
 ```
+
+## 05. 行内元素和块元素
+
+* 块元素
+  * 无论内容多少，元素独占一行
+* 行内元素
+  * 左右都是行内元素的可以排在一行
+
+## 06. 列表标签
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表学习</title>
+</head>
+    <body>
+        <!--
+            有序列表:
+            <ol></ol> 列表项用<li></li>
+            一样有默认样式 但一般用css进行设置
+         -->
+        <ol>
+            <li>Java</li>
+            <li>python</li>
+            <li>c/c++</li>
+        </ol>
+        <hr>
+        <!--
+            无序列表：
+            没有顺序之分  <ul></ul> 中只能镶嵌<li></li>,不可设置其他标签文字
+            无序列表有默认的样式 但一般用css进行设置
+        -->
+        <ul>
+            <li>Java</li>
+            <li>python</li>
+            <li>c/c++</li>
+        </ul>
+        <hr>
+        <!--
+            自定义列表:
+            与无序列表有点类似 但是自定义列表有列表标题和列表项两部分
+            书写格式:定义列表<dl></dl>  列表标题<dt></dt>  列表项<dd></dd>
+            标题与列表项没有数量限制
+        -->
+        <dl>
+            <dt>学科</dt>
+            <dd>Java</dd>
+            <dd>python</dd>
+            <dd>c/c++</dd>
+            <dt>位置</dt>
+            <dd>重庆</dd>
+            <dd>西安</dd>
+            <dd>成都</dd>
+        </dl>
+    </body>
+</html>
+```
+
+结果演示：
+
+![demo3](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_HTML_Demo3.png)
+
+## 07. 表格标签
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格学习</title>
+</head>
+    <body>
+        <!--
+            表格分为表头和表体
+            表格标签书写格式:
+            <table>
+                <thead>
+                    <tr>
+                        <th>表头单元格的内容</th>
+                        ...
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>表体单元格的内容</td>
+                        ...
+                    </tr>
+                    ...
+                </tbody>
+            </table>
+            表格属性:
+                属性名             属性值               描述
+                align             left、center、right   表格相对周围元素对齐的方式
+                border            "1"或""               表格是否拥有边框,默认为"",没有边框
+                cellpadding       像素值                单元格与其内容的空白,默认为1像素
+                cellspacing       像素值                单元格之间的空白,默认为2像素
+                width             像素值或百分比         规定表格的宽度
+
+            合并单元格:
+                跨行合并:rowspan="合并的单元格数"(合并行)
+                跨列合并:colspan="合并的单元格数"(合并列)
+        -->
+        <table border="1" cellpadding="5px">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>张三</td>
+                <td>男</td>
+                <td>18岁</td>
+            </tr>
+            <tr>
+                <td>冯宝宝</td>
+                <td>女</td>
+                <td>18岁</td>
+            </tr>
+            <tr>
+                <td>王也</td>
+                <td>男</td>
+                <td>19岁</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <table border="1">
+            <thead>
+            <tr>
+                <th rowspan="2"> 第一行第一个</th>
+                <th>第一行第二个</th>
+                <th>第一行第三个</th>
+                <th>第一行第四个</th>
+            </tr>
+            <tr>
+                <th colspan="2">第二行第二个</th>
+                <th>第二行第三个</th>
+            </tr>
+            </thead>
+        </table>
+    </body>
+</html>
+```
+
+结果演示：
+
+![demo4](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_HTML_Demo4.png)
+
+## 08. 媒体元素 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>媒体元素学习</title>
+</head>
+    <body>
+        <!--
+            音频和视频
+            src:资源路径
+            controls:控制条
+            autoplay:自动播放
+        -->
+        <video src="test.mp4" controls autoplay></video>
+
+        <hr>
+
+        <!--音频-->
+        <audio src="test_audio.mp3" controls ></audio>
+</html>
+```
+
+结果演示：
+
+![demo5](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_HTML_Demo5.png)

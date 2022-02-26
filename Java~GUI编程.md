@@ -889,4 +889,402 @@ class MyDialogDemo extends JDialog{
         contentPane.add(new Label("hello"));
     }
 }
+```  
+
+### 4.3 标签
+
+label
+
+```java
+new JLabel("xxx");
 ```
+
+图标 ICON
+
+```java
+package top.cxy96.java_GUI.lesson5;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+public class ImageIconDemo extends JFrame {
+    public ImageIconDemo(){
+        // 获取图片地址
+        JLabel label = new JLabel("ImageIcon");
+        // 同级目录下
+        URL url = ImageIconDemo.class.getResource("man.jpg");
+        ImageIcon imageIcon = new ImageIcon(url);
+        label.setIcon(imageIcon);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+
+        Container contentPane = getContentPane();
+        contentPane.add(label);
+        setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setBounds(100,100,200,200);
+    }
+    public static void main(String[] args) {
+        new ImageIconDemo();
+    }
+}
+```
+
+### 4.4 面板
+
+Panel  
+
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Jpanel extends JFrame {
+    public Jpanel(){
+        Container contentPane = this.getContentPane();
+        contentPane.setLayout(new GridLayout(2,1,10,10)); // 后面参数间距
+        JPanel jPanel = new JPanel(new GridLayout(1,3));
+        jPanel.add(new JButton("1"));
+        jPanel.add(new JButton("2"));
+        jPanel.add(new JButton("3"));
+        contentPane.add(jPanel);
+        this.setVisible(true);
+        this.setSize(500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    }
+
+    public static void main(String[] args) {
+        new Jpanel();
+    }
+}
+```  
+
+结果：  
+![Demo13](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo13.png)
+
+JScrollPanel
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class JScrollDemoDemo extends JFrame {
+    public JScrollDemoDemo() {
+        Container contentPane = this.getContentPane();
+
+        // 文本域
+        JTextArea jTextArea = new JTextArea(20,50);
+        jTextArea.setText("学Java认识Java");
+        contentPane.add(jTextArea);
+
+        // Scroll面板
+        JScrollPane jScrollPane = new JScrollPane(jTextArea);
+        contentPane.add(jScrollPane);
+
+
+        this.setVisible(true);
+        this.setBounds(100,100,300,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new JScrollDemoDemo();
+    }
+}
+```
+结果：  
+![Demo14](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo14.png)
+
+### 4,5 按钮
+图片按钮  
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+public class JButtonDemo01 extends JFrame {
+    public JButtonDemo01(){
+        Container contentPane = this.getContentPane();
+        URL url = JButtonDemo01.class.getResource("man.jpg");
+        // 将图片变为图标
+        ImageIcon imageIcon = new ImageIcon(url);
+
+        // 把图标放在按钮上
+        JButton jButton = new JButton();
+        jButton.setIcon(imageIcon);
+        jButton.setToolTipText("图片按钮");
+
+        // 按钮加到容器上
+        contentPane.add(jButton);
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    }
+
+    public static void main(String[] args) {
+        new JButtonDemo01();
+    }
+} 
+```
+
+结果：  
+![Demo15](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo15.png)
+
+单选按钮
+
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+public class JButtonDemo02 extends JFrame {
+    public JButtonDemo02() {
+        Container contentPane = this.getContentPane();
+        URL resource = JButtonDemo02.class.getResource("man.jpg");
+        ImageIcon imageIcon = new ImageIcon(resource);
+
+        // 单选框
+        JRadioButton jRadioButton1 = new JRadioButton("jRadioButton1");
+        JRadioButton jRadioButton2 = new JRadioButton("jRadioButton2");
+        JRadioButton jRadioButton3 = new JRadioButton("jRadioButton3");
+
+        // 单选框一般会分为一组,一个组中只能选择一个
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(jRadioButton1);
+        buttonGroup.add(jRadioButton2);
+        buttonGroup.add(jRadioButton3);
+
+        contentPane.add(jRadioButton1,BorderLayout.NORTH);
+        contentPane.add(jRadioButton2,BorderLayout.SOUTH);
+        contentPane.add(jRadioButton3,BorderLayout.CENTER);
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new JButtonDemo02();
+    }
+}
+```  
+结果：  
+![Demo16](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo16.png)  
+
+多选按钮  
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+public class JButtonDemo03 extends JFrame{
+    public JButtonDemo03() {
+        Container contentPane = this.getContentPane();
+        URL resource = JButtonDemo02.class.getResource("man.jpg");
+        ImageIcon imageIcon = new ImageIcon(resource);
+
+        // 多选框
+        JCheckBox jCheckBox1 = new JCheckBox("jCheckBox1");
+        JCheckBox jCheckBox2 = new JCheckBox("jCheckBox2");
+        JCheckBox jCheckBox3 = new JCheckBox("jCheckBox3");
+
+        contentPane.add(jCheckBox1,BorderLayout.NORTH);
+        contentPane.add(jCheckBox2,BorderLayout.SOUTH);
+        contentPane.add(jCheckBox3,BorderLayout.CENTER);
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new JButtonDemo03();
+    }
+}
+```
+结果：  
+![Demo17](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo17.png) 
+
+### 4.6 列表
+  
+* 下拉框
+```java
+package top.cxy96.java_GUI.lesson7;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class TestComboboxDemo01 extends JFrame {
+    public TestComboboxDemo01() {
+        Container contentPane = this.getContentPane();
+        JComboBox status = new JComboBox();
+
+        status.addItem(null);
+        status.addItem("正在上映");
+        status.addItem("已下架");
+        status.addItem("正在热映");
+
+        contentPane.add(status);
+
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestComboboxDemo01();
+    }
+}
+```  
+结果：  
+![Demo18](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo18.png) 
+
+* 列表框
+```java
+package top.cxy96.java_GUI.lesson7;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Vector;
+
+public class TestComboboxDemo02 extends JFrame {
+    public TestComboboxDemo02(){
+        Container contentPane = this.getContentPane();
+
+        // 生成列表内容
+        // String[] contents = {"1","2","3"};
+        Vector contents = new Vector();
+
+        // 列表中需要放入内容
+        JList jList = new JList(contents);
+
+        contents.add("one");
+        contents.add("two");
+        contents.add("three");
+
+        contentPane.add(jList);
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestComboboxDemo02();
+    }
+}
+```
+结果：  
+![Demo19](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo19.png) 
+
+- 应用场景
+  * 选择地区或一些单个选项
+  * 列表，展示信息，一般动态扩容
+
+### 4.7 文本框
+```java
+package top.cxy96.java_GUI.lesson7;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class TestTextDemo01 extends JFrame {
+    public TestTextDemo01() {
+        Container contentPane = this.getContentPane();
+
+        JTextField jTextField1 = new JTextField("hello");
+        JTextField jTextField2 = new JTextField("world",20); // 默认字符个数
+
+        contentPane.add(jTextField1,BorderLayout.NORTH);
+        contentPane.add(jTextField2,BorderLayout.SOUTH);
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestTextDemo01();
+    }
+}
+```
+
+结果：  
+![Demo20](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo20.png)
+
+密码框
+```java
+package top.cxy96.java_GUI.lesson7;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class TestTextDemo02 extends JFrame {
+    public TestTextDemo02() {
+        Container contentPane = this.getContentPane();
+
+        JPasswordField jPasswordField = new JPasswordField(); // ***
+        jPasswordField.setEchoChar('*');
+
+        contentPane.add(jPasswordField);
+
+        this.setVisible(true);
+        this.setBounds(100,200,500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestTextDemo02();
+    }
+}
+```
+
+结果：  
+![Demo21](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo21.png) 
+
+文本域
+
+```java
+package top.cxy96.java_GUI.lesson6;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class JScrollDemoDemo extends JFrame {
+    public JScrollDemoDemo() {
+        Container contentPane = this.getContentPane();
+
+        // 文本域
+        JTextArea jTextArea = new JTextArea(20,50);
+        jTextArea.setText("学Java认识Java");
+        contentPane.add(jTextArea);
+
+        // Scroll面板
+        JScrollPane jScrollPane = new JScrollPane(jTextArea);
+        contentPane.add(jScrollPane);
+
+
+        this.setVisible(true);
+        this.setBounds(100,100,300,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new JScrollDemoDemo();
+    }
+}
+```
+
+结果：  
+![Demo22](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo14.png) 
