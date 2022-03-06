@@ -126,7 +126,7 @@ public class TestPanel {
         });
     }
 }
-```  
+```
 运行结果：
 ![Demo1](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Java_GUI_Demo2.png)  
 3. 布局管理器
@@ -161,7 +161,7 @@ public class TestFlow {
         frame.setVisible(true);
     }
 }
-```  
+```
 运行结果：
 ![Demo3](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo3.png)
 * 东西南北中
@@ -190,7 +190,7 @@ public abstract class TestBorderLayout {
         frame.setVisible(true);
     }
 }
-```  
+```
 ![Demo4](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo4.png)
 * 表格布局
 ```java
@@ -223,11 +223,11 @@ public class TestGrid {
 
     }
 }
-```  
+```
 运行结果： 
 ![Demo5](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo5.png)
- 
- 
+
+
 ### 综合案列
 效果展示：  
 ![Demo6](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo6.png)  
@@ -380,7 +380,7 @@ class MyActionListener2 implements ActionListener {
         field.setText(null);  // "" 或 null
     }
 }
-```  
+```
 ### 3.3 简易计算器
 #### 实现代码
 ```java
@@ -616,7 +616,7 @@ class MyPaint extends Frame{
         
     }
 }
-```  
+```
 结果演示：  
 ![Demo9](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo9.png)  
 
@@ -889,7 +889,7 @@ class MyDialogDemo extends JDialog{
         contentPane.add(new Label("hello"));
     }
 }
-```  
+```
 
 ### 4.3 标签
 
@@ -959,7 +959,7 @@ public class Jpanel extends JFrame {
         new Jpanel();
     }
 }
-```  
+```
 
 结果：  
 ![Demo13](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo13.png)
@@ -1075,7 +1075,7 @@ public class JButtonDemo02 extends JFrame {
         new JButtonDemo02();
     }
 }
-```  
+```
 结果：  
 ![Demo16](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo16.png)  
 
@@ -1116,7 +1116,7 @@ public class JButtonDemo03 extends JFrame{
 ![Demo17](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo17.png) 
 
 ### 4.6 列表
-  
+
 * 下拉框
 ```java
 package top.cxy96.java_GUI.lesson7;
@@ -1146,7 +1146,7 @@ public class TestComboboxDemo01 extends JFrame {
         new TestComboboxDemo01();
     }
 }
-```  
+```
 结果：  
 ![Demo18](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo18.png) 
 
@@ -1288,3 +1288,264 @@ public class JScrollDemoDemo extends JFrame {
 
 结果：  
 ![Demo22](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo14.png) 
+
+## 5. 贪吃蛇
+
+代码：
+
+```java
+package top.cxy96.java_GUI.lesson8.snake;
+
+import javax.swing.*;
+
+// 游戏的主启动类
+public class StartGame {
+    public static void main(String[] args) {
+        JFrame jFrame = new JFrame();
+
+
+        jFrame.setBounds(450,250,900,720);
+        jFrame.setResizable(false); //　默认大小不可拉伸
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // 正常游戏界面
+        jFrame.add(new GamePanel());
+
+        jFrame.setVisible(true);
+    }
+}
+```
+
+```java
+package top.cxy96.java_GUI.lesson8.snake;
+import javax.swing.*;
+import java.net.URL;
+
+// 数据中心
+public class Data {
+    public static URL headerURL = Data.class.getResource("statics/header.png");
+    public static URL upURL = Data.class.getResource("statics/up.png");
+    public static URL downURL = Data.class.getResource("statics/down.png");
+    public static URL leftURL = Data.class.getResource("statics/left.png");
+    public static URL rightURL = Data.class.getResource("statics/right.png");
+
+    public static ImageIcon header = new ImageIcon(headerURL);
+    public static ImageIcon up = new ImageIcon(upURL);
+    public static ImageIcon down = new ImageIcon(downURL);
+    public static ImageIcon left = new ImageIcon(leftURL);
+    public static ImageIcon right = new ImageIcon(rightURL);
+
+    public static URL bodyURL = Data.class.getResource("statics/body.png");
+    public static ImageIcon body = new ImageIcon(bodyURL);
+
+    public static URL foodURL = Data.class.getResource("statics/food.png");
+    public static ImageIcon food = new ImageIcon(foodURL);
+
+}
+```
+
+```java
+package top.cxy96.java_GUI.lesson8.snake;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Random;
+
+//　游戏的面版
+public class GamePanel extends JPanel implements KeyListener, ActionListener {
+    // 定义蛇的数据结构
+    int length;  // 蛇的长度
+    int[] snakeX = new int[600]; // 蛇的x坐标25*25
+    int[] snakeY = new int[500]; // 蛇的x坐标25*25
+    String direction;  // 头方向
+    boolean isStart = false; // 当前游戏状态
+    boolean isFail = false; // 游戏失败状态
+
+    // 食物的坐标
+    int foodX;
+    int foodY;
+    Random random = new Random();
+
+    // 分数
+    int score;
+
+    // 定时器
+    Timer timer = new Timer(100,this);  // 100ms执行一次
+
+    // 构造器
+    public GamePanel() {
+        init();
+        // 获得焦点和监听事件
+        this.setFocusable(true); // 获取焦点
+        this.addKeyListener(this); // 获取键盘
+        timer.start();
+    }
+
+    // 初始化方法
+    public void init(){
+        length = 3;
+        snakeX[0] = 100;snakeY[0] = 100; // 头的坐标
+        snakeX[1] = 75;snakeY[1] = 100; // 第一个身体的坐标
+        snakeX[2] = 50;snakeY[2] = 100; // 第二个身体的坐标
+        direction = "R"; // 初始化方向向右
+        // 把食物随机分布在界面上
+        foodX = 25 +25*random.nextInt(34);
+        foodY = 75 +25*random.nextInt(24);
+        // 初始化分数
+        score = 0;
+    }
+
+    // 绘制面板，游戏中所有东西都用画笔画
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // 绘制静态面板
+        this.setBackground(Color.WHITE);
+        Data.header.paintIcon(this,g,25,11); // 头部广告
+        g.fillRect(25,75,850,600); // 默认游戏界面
+
+        // 画积分
+        g.setColor(Color.white);
+        g.setFont(new Font("微软雅黑",Font.BOLD,18));
+        g.drawString("长度"+length,750,35);
+        g.drawString("分数"+score,750,55);
+
+        // 画食物
+        Data.food.paintIcon(this,g,foodX,foodY);
+
+        // 画小蛇
+        if(direction.equals("R")){
+            Data.right.paintIcon(this,g,snakeX[0],snakeY[0]); // 头初始化向右,通过方向来判断
+        }else if(direction.equals("L")){
+            Data.left.paintIcon(this,g,snakeX[0],snakeY[0]); // 头初始化向右,通过方向来判断
+        }else if(direction.equals("U")){
+            Data.up.paintIcon(this,g,snakeX[0],snakeY[0]); // 头初始化向右,通过方向来判断
+        }else if(direction.equals("D")){
+            Data.down.paintIcon(this,g,snakeX[0],snakeY[0]); // 头初始化向右,通过方向来判断
+        }
+
+        for(int i=1;i<length;i++){
+            Data.body.paintIcon(this,g,snakeX[i],snakeY[i]); // 身体
+        }
+        // 游戏状态
+        if(isStart == false){
+            // 先设置画笔颜射
+            g.setColor(Color.white);
+            // 设置字体
+            g.setFont(new Font("微软雅黑",Font.BOLD,40));
+            g.drawString("按下空格开始游戏",300,300);
+        }
+        if(isFail == true){
+            // 先设置画笔颜射
+            g.setColor(Color.red);
+            // 设置字体
+            g.setFont(new Font("微软雅黑",Font.BOLD,40));
+            g.drawString("游戏失败,按下空格重新开始",300,300);
+        }
+    }
+
+
+    // 键盘监听事件
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int KeyCode = e.getKeyCode(); // 获取键盘按键
+        if(KeyCode == KeyEvent.VK_SPACE){
+            if(isFail){
+                // 重新开始
+                isFail = false;
+                init();
+            }else{
+                // 按下空格开始
+                isStart = !isStart; // 取反
+            }
+            repaint();
+        }
+        // 小蛇移动
+        if(KeyCode==KeyEvent.VK_UP){
+            direction = "U";
+        }
+        else if(KeyCode==KeyEvent.VK_DOWN){
+            direction = "D";
+        }
+        else if(KeyCode==KeyEvent.VK_LEFT){
+            direction = "L";
+        }
+        else if(KeyCode==KeyEvent.VK_RIGHT){
+            direction = "R";
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    //　事件监听---固定时间刷新
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 如果游戏是开始状态，就让小蛇动起来
+        if(isStart && isFail == false){
+            // 吃食物
+            if(snakeX[0] == foodX && snakeY[0] ==foodY){
+                length++; // 长度加一
+                score+=10;// 分数加十
+                // 再次随机食物
+                foodX = 25 +25*random.nextInt(34);
+                foodY = 75 +25*random.nextInt(24);
+            }
+
+            // 移动
+            for(int i = length-1;i>0;i--){
+                snakeX[i] = snakeX[i-1]; // 向前移动一截
+                snakeY[i] = snakeY[i-1];
+            }
+            // 走向
+            if(direction.equals("R")){
+                snakeX[0] = snakeX[0]+25;
+                // 边界判断
+                if(snakeX[0]>850){
+                    snakeX[0] =25;
+                }
+            }else if(direction.equals("L")){
+                snakeX[0] = snakeX[0]-25;
+                if(snakeX[0]<25){
+                    snakeX[0] = 850;
+                }
+            }
+            else if(direction.equals("U")){
+                snakeY[0] = snakeY[0] - 25;
+                if (snakeY[0]<75){
+                    snakeY[0] = 650;
+                }
+            }
+            else if(direction.equals("D")){
+                snakeY[0] = snakeY[0] +25;
+                if(snakeY[0]>650){
+                    snakeY[0] = 75;
+                }
+            }
+            // 失败判定,撞到自己
+            for (int i = 1; i < length; i++) {
+                if(snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]){
+                    isFail = true;
+                }
+            }
+            repaint(); // 重画画面
+        }
+        timer.start(); // 定时器开始
+    }
+}
+```
+
+结果演示：
+
+![Demo22](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Demo_GUI_Demo22.png)
+
