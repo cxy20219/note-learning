@@ -182,6 +182,113 @@ public class TestThread4 implements Runnable{
 
 ！线程不安全了，数据会出现紊乱
 
+### 2.3 Callable接口实现
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo02;
+
+import java.util.concurrent.*;
+
+// Callable 需要返回值
+public class TestCallable implements Callable<Boolean> {
+    // 票数
+    private int ticketNums = 10;
+
+    @Override
+    public Boolean call(){
+        while (true){
+            if(ticketNums <= 0){
+                break;
+            }
+            // Thread.currentThread().getName()方法获取线程的名字
+            System.out.println(Thread.currentThread().getName()+"拿到了第"+ticketNums--+"票");
+        }
+        return true;
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        TestCallable t1 = new TestCallable();
+        TestCallable t2 = new TestCallable();
+
+        // 创建执行服务
+        ExecutorService ser = Executors.newFixedThreadPool(2);
+
+        // 提交执行
+        Future<Boolean> result1 = ser.submit(t1);
+        Future<Boolean> result2 = ser.submit(t2);
+
+        // 获取结果
+        boolean r1 = result1.get();
+        boolean r2 = result2.get();
+
+        // 关闭服务
+        ser.shutdownNow();
+    }
+}
+
+```
+
+结果演示：
+
+![Demo5](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo5.png?ynotemdtimestamp=1647071903556)
+
+### 2.4 静态代理
+
+* 真实对象和代理对象实现同一个接口
+* 代理对象要代理真实角色
+* 代理对象可以做真实对象不能做的事情
+
+示例代码：
+
+```java
+ package top.cxy96.multithreading.Demo02;
+public class StacticProxy {
+    public static void main(String[] args) {
+        WeddingCpmpany weddingCpmpany = new WeddingCpmpany(new You());
+        weddingCpmpany.HappyMarry();
+    }
+}
+
+interface Marry {
+    void HappyMarry();
+}
+// 真实角色
+class You implements Marry {
+    @Override
+    public void HappyMarry() {
+        System.out.println("xxx结婚了");
+    }
+}
+// 代理角色
+class WeddingCpmpany implements Marry{
+    private Marry target;
+
+    public WeddingCpmpany(Marry target){
+        this.target = target;
+    }
+    @Override
+    public void HappyMarry() {
+        before();
+        this.target.HappyMarry();
+        after();
+    }
+
+    private void before() {
+        System.out.println("婚前");
+    }
+
+    private void after() {
+        System.out.println("婚后");
+    }
+}
+```
+
+结果演示：
+
+![Demo6](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo6.png?ynotemdtimestamp=1647071903556)
+
 ## 3. 线程状态
 
 ## 4. 线程同步
