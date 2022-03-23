@@ -289,7 +289,149 @@ class WeddingCpmpany implements Marry{
 
 ![Demo6](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo6.png?ynotemdtimestamp=1647071903556)
 
+### 2.5 Lambda表达式
+
+函数式接口：
+
+* 任何一个接口只包含一个抽象方法，就是函数式接口
+* 可以通过Lambda表达式来创建该接口的对象
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo02;
+
+public class TestLambda {
+    // 3. 静态内部类
+    static class Like2 implements ILike{
+        @Override
+        public void lambda() {
+            System.out.println("This is Lambda2");
+        }
+    }
+    public static void main(String[] args) {
+        Like like = new Like();
+        like.lambda();
+
+        Like2 like2 = new Like2();
+        like2.lambda();
+
+        // 4. 局部内部类
+        class Like3 implements ILike{
+            @Override
+            public void lambda() {
+                System.out.println("This is Lambda3");
+            }
+        }
+        Like3 like3 = new Like3();
+        like3.lambda();
+
+        // 5. 匿名内部类 ， 没有类的名字， 必须借助接口或父类
+        ILike like4 = new ILike() {
+            @Override
+            public void lambda() {
+                System.out.println("This is Lambda4");
+            }
+        };
+        like4.lambda();
+
+        // 6. lambda简化
+        ILike like5 = ()->{System.out.println("This is Lambda5");};
+        like5.lambda();
+    }
+}
+
+// 1. 定义一个函数式接口
+interface ILike{
+    void lambda();
+}
+// 2. 实现类
+class Like implements ILike{
+    @Override
+    public void lambda() {
+        System.out.println("This is Lambda1");
+    }
+}
+```
+
+结果演示：
+
+![Demo7](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo7.png?ynotemdtimestamp=1647071903556)
+
+#### 传参与简化：
+
+Lambda简化:
+
+1. 表达式只有一行代码的情况下可以简化为一行，多行时使用代码块
+2. 多个参数也可以去掉参数类型，需要加上括号
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo02;
+
+public class SimplifyLambda {
+    public static void main(String[] args) {
+        // 1. 直接传参
+        ILove iLove1 = (int a) -> {
+            System.out.println("I LOVE "+ a);
+        };
+        iLove1.love(520);
+
+        // 2. 简化一：去掉参数类型
+        ILove iLove2 = (a)->{
+            System.out.println("I LOVE "+ a);
+        };
+        iLove2.love(521);
+
+        // 3. 简化二：去掉括号
+        ILove iLove3 = a->{
+            System.out.println("I LOVE "+ a);
+        };
+        iLove3.love(522);
+
+        // 4. 简化三：去掉大括号  
+        ILove iLove4 = a-> System.out.println("I LOVE "+ a);
+        iLove4.love(523);
+    }
+}
+interface ILove{
+    void love(int a);
+}
+```
+
+结果演示：
+
+![Demo8](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo8.png?ynotemdtimestamp=1647071903556)
+
 ## 3. 线程状态
+
+
+```
+flowchart LR
+    创建状态 --> 就绪状态 --> 运行状态 ---> 就绪状态
+    运行状态 --> 阻塞状态
+    阻塞状态 --> 就绪状态
+    运行状态 --> 结束状态
+    
+```  
+---
+**线程方法：**
+
+  
+|              方法              |            说明            |
+| :----------------------------: | :------------------------: |
+|  setPriority(int newPriority)  |       更改线程优先级       |
+| static void sleep(long millis) |   让当前线程休眠指定毫秒   |
+|          void join()           |       等待该线程终结       |
+|      static void yield()       | 暂停当前线程，执行其他线程 |
+|         void interript         |          中断线程          |
+|       bollean isAlive()        |  测色线程是否处于活动状态  |
+
+
+### 3.1 线程停止
+
+
 
 ## 4. 线程同步
 
