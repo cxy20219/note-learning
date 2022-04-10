@@ -406,19 +406,12 @@ interface ILove{
 
 ## 3. 线程状态
 
+![Demo10](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo10.png?ynotemdtimestamp=1647071903556)
 
-```
-flowchart LR
-    创建状态 --> 就绪状态 --> 运行状态 ---> 就绪状态
-    运行状态 --> 阻塞状态
-    阻塞状态 --> 就绪状态
-    运行状态 --> 结束状态
-    
-```  
 ---
 **线程方法：**
 
-  
+
 |              方法              |            说明            |
 | :----------------------------: | :------------------------: |
 |  setPriority(int newPriority)  |       更改线程优先级       |
@@ -469,9 +462,726 @@ public class TestStop implements Runnable {
 }
 ```
 
+结果演示：
+
+![Demo9](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo9.png?ynotemdtimestamp=1647071903556)
+
+### 3.2 线程休眠
+
+* 指定当前线程阻塞的毫秒数
+* 存在interruptedException异常
+* sleep时间后线程进入就绪状态
+* sleep不会释放锁
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestSleep {
+    public static void main(String[] args) {
+        try {
+            new delayTime(15).tenDowm();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+}
+// 模拟倒计时
+class delayTime{
+    private static int num;
+
+    delayTime(int num){
+        this.num = num;
+    }
+    static void tenDowm() throws InterruptedException {
+        while (true){
+            Thread.sleep(1000);
+            System.out.println(num--);
+            if (num<=0){
+                break;
+            }
+        }
+    }
+}
+
+```
+
+结果演示：
+
+![Demo11](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo11.png?ynotemdtimestamp=1647071903556)
+
+### 3.3 线程礼让
+
+* 让当前正在执行的线程暂停，不阻塞
+* 将线程从运行状态转为就绪状态
+* ！ 礼让不一定成功
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestYield {
+    public static void main(String[] args) {
+        MyYield myYield = new MyYield();
+        new Thread(myYield,"a").start();
+        new Thread(myYield,"b").start();
+    }
+}
+class MyYield implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName()+"线程开始执行");
+        Thread.yield();
+        System.out.println(Thread.currentThread().getName()+"线程停止执行");
+    }
+}
+
+```
+
+结果演示：
+
+![Demo12](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo12.png?ynotemdtimestamp=1647071903556)
+
+![Demo13](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo13.png?ynotemdtimestamp=1647071903556)
+
+### 3.4 线程强制执行
+
+* Join 合并线程，待线程执行完成后，再执行其他线程，其他线程阻塞
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestJoin {
+    public static void main(String[] args) {
+        MyProcess myProcess = new MyProcess();
+        Thread thread = new Thread(myProcess,"Vip");
+        thread.start();
+        for (int i = 0; i < 500; i++) {
+            if (i==100){
+                try {
+                    thread.join(); // 强制执行
+                }
+                catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("main线程"+i);
+        }
+
+    }
+}
+class MyProcess implements Runnable{
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("线程Vip来了"+i);
+        }
+    }
+}
+```
+
+结果演示：
+
+![Demo14](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo14.png?ynotemdtimestamp=1647071903556)
+
+### 3.5 观察线程状态
+
+线程状态。 线程可以处于以下状态之一：
+
+- [`NEW`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#NEW)
+  尚未启动的线程处于此状态。
+- [`RUNNABLE`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#RUNNABLE)
+  在Java虚拟机中执行的线程处于此状态。
+- [`BLOCKED`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#BLOCKED)
+  被阻塞等待监视器锁定的线程处于此状态。
+- [`WAITING`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#WAITING)
+  正在等待另一个线程执行特定动作的线程处于此状态。
+- [`TIMED_WAITING`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#TIMED_WAITING)
+  正在等待另一个线程执行动作达到指定等待时间的线程处于此状态。
+- [`TERMINATED`](https://www.matools.com/file/manual/jdk_api_1.8_google/java/lang/Thread.State.html#TERMINATED)
+  已退出的线程处于此状态。
+
+实例代码：
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestState {
+    public static void main(String[] args) {
+        Thread thread = new Thread(()->{
+            for (int i = 0; i < 5; i++) {
+                try{
+                    Thread.sleep(10);
+                }
+                catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        );
+
+        // 观察状态
+        Thread.State state = thread.getState();
+        System.out.println(state);
+
+        // 启动线程
+        thread.start();
+        state = thread.getState();
+        System.out.println(state);
+
+        while (state != Thread.State.TERMINATED){
+            state = thread.getState();
+            System.out.println(state);
+        }
+    }
+}
+```
+
+结果演示：
+
+![Demo15](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo15.png?ynotemdtimestamp=1647071903556)
+
+### 3.6 线程优先级
+
+* Java提供一个线程调度器来监控程序中启动后进入就绪状态的所有线程
+* 线程优先级数字表示 1 ~ 10
+* 使用getPriority()获取优先级
+* 使用setPriority()设置优先级
+
+实例代码：
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestPriority{
+    public static void main(String[] args) {
+        MyPriority myPriority = new MyPriority();
+
+        Thread a = new Thread(myPriority,"a");
+        Thread b = new Thread(myPriority,"b");
+        Thread c = new Thread(myPriority,"c");
+        Thread d = new Thread(myPriority,"d");
+
+        // 设置优先级
+        a.start();
+        b.setPriority(1);
+        b.start();
+        c.setPriority(4);
+        c.start();
+        d.setPriority(Thread.MAX_PRIORITY);
+        d.start();
+        // 主线程 默认优先级
+        System.out.println(Thread.currentThread().getName()+"-->"+Thread.currentThread().getPriority());
+    }
+}
+class MyPriority implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName()+"-->"+Thread.currentThread().getPriority());
+    }
+}
+
+```
+
+结果演示：
+
+![Demo16](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo16.png?ynotemdtimestamp=1647071903556)
+
+### 3.7 守护线程
+
+* 用户线程结束则守护线程结束
+
+```java
+package top.cxy96.multithreading.Demo03;
+
+public class TestDaemon {
+    public static void main(String[] args) {
+        God god = new God();
+        Thread thread = new Thread(god);
+        thread.setDaemon(true);   // 默认为false用户线程
+        thread.start();
+
+        Person you = new Person();
+        new Thread(you).start();
+    }
+}
+class God implements Runnable{
+    @Override
+    public void run() {
+        while (true){
+            System.out.println("三清老祖保佑你！");
+        }
+    }
+}
+
+class Person implements Runnable{
+    @Override
+    public void run() {
+        System.out.println("hello world!");
+        for (int i = 0; i < 36500; i++) {
+            System.out.println("开心地敲代码");
+        }
+        System.out.println("good bye world!");
+    }
+}
+```
+
 
 
 ## 4. 线程同步
+
+### 4.1 线程同步机制
+
+线程锁：
+
+* 一个线程锁上时其他线程需等待
+* 会引起性能问题
+* 如果优先级高的线程等优先级低的线程释放锁，会导致优先级倒置，引起性能问题
+
+### 4.2 线程安全
+
+**不安全示例1：**
+
+```jav
+package top.cxy96.multithreading.Demo04;
+
+public class UnsafeBuyTicket {
+    public static void main(String[] args) {
+        BuyTicket buyTicket = new BuyTicket();
+        new Thread(buyTicket,"小明").start();
+        new Thread(buyTicket,"黄牛").start();
+        new Thread(buyTicket,"小强").start();
+    }
+}
+class BuyTicket implements Runnable{
+    private int tickNums = 10;    // 票
+    boolean flag = true; // 外部停止标志
+    @Override
+    public void run() {
+        while (flag){
+            try{
+                buy();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void buy() throws InterruptedException{
+        if(tickNums<=0){
+            flag = false;
+            return;
+        }
+        // 模拟延时
+        Thread.sleep(100);
+        // 买票
+        System.out.println(Thread.currentThread().getName()+"拿到"+tickNums--);
+    }
+}
+```
+
+结果演示：
+
+![Demo17](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo17.png?ynotemdtimestamp=1647071903556)
+
+**不安全案列2：**
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+public class UnsafeBank {
+    public static void main(String[] args) {
+        Account account = new Account("张三",1_000_000);
+        Drawing zhangsan = new Drawing(account,600_000,"张三");
+        Drawing girlfriend = new Drawing(account,500_000,"girlfriend");
+        zhangsan.start();
+        girlfriend.start();
+    }
+}
+
+// 账户
+class Account{
+    int money;
+    String name;
+    public Account(String name,int money) {
+        this.name = name;
+        this.money = money;
+    }
+}
+// 银行
+class Drawing extends Thread{
+    Account account;
+    int drawingMoney;
+    int nowMoney;
+
+    public Drawing(Account account,int drawingMoney,String name){
+        super(name);
+        this.drawingMoney = drawingMoney;
+        this.account = account;
+    }
+
+    @Override
+    public void run() {
+        if(account.money - drawingMoney<0){
+            System.out.println(Thread.currentThread().getName()+"余额不足");
+            return;
+        }
+
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        account.money = account.money-drawingMoney;
+        nowMoney = nowMoney+drawingMoney;
+        System.out.println(account.name+"余额："+account.money);
+        System.out.println(this.getName()+"现金"+nowMoney);
+    }
+}
+```
+
+结果演示：
+
+![Demo18](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo18.png?ynotemdtimestamp=1647071903556)
+
+**不安全案例3：**
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UnsafeList {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            new Thread(()->{
+                list.add(Thread.currentThread().getName());
+            }).start();
+        }
+        System.out.println(list.size());
+    }
+}
+```
+
+结果演示：
+
+![Demo19](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo19.png?ynotemdtimestamp=1647071903556)
+
+### 4.3 同步方法
+
+用synchronized为对象加上一把锁。
+
+**案例1同步实现：**
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+public class UnsafeBuyTicket {
+    public static void main(String[] args) {
+        BuyTicket buyTicket = new BuyTicket();
+        new Thread(buyTicket,"小明").start();
+        new Thread(buyTicket,"黄牛").start();
+        new Thread(buyTicket,"小强").start();
+    }
+}
+class BuyTicket implements Runnable{
+    private int tickNums = 10;    // 票
+    boolean flag = true; // 外部停止标志
+    @Override
+    public void run() {
+        while (flag){
+            try{
+                buy();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    // synchronized 同步方法,锁this
+    private synchronized void buy() throws InterruptedException{
+        if(tickNums<=0){
+            flag = false;
+            return;
+        }
+        // 模拟延时
+        Thread.sleep(100);
+        // 买票
+        System.out.println(Thread.currentThread().getName()+"拿到"+tickNums--);
+    }
+}
+```
+
+结果演示：
+
+![Demo20](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo20.png?ynotemdtimestamp=1647071903556)
+
+**案例2同步实现：**
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+public class UnsafeBank {
+    public static void main(String[] args) {
+        Account account = new Account("张三",1_000_000);
+        Drawing zhangsan = new Drawing(account,600_000,"张三");
+        Drawing girlfriend = new Drawing(account,500_000,"girlfriend");
+        zhangsan.start();
+        girlfriend.start();
+    }
+}
+
+// 账户
+class Account{
+    int money;
+    String name;
+    public Account(String name,int money) {
+        this.name = name;
+        this.money = money;
+    }
+}
+// 银行
+class Drawing extends Thread{
+    Account account;
+    int drawingMoney;
+    int nowMoney;
+
+    public Drawing(Account account,int drawingMoney,String name){
+        super(name);
+        this.drawingMoney = drawingMoney;
+        this.account = account;
+    }
+
+    @Override
+    public void run() {
+        // 锁要变化的对象
+        synchronized ((account)) {
+            if (account.money - drawingMoney < 0) {
+                System.out.println(Thread.currentThread().getName() + "余额不足");
+                return;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            account.money = account.money - drawingMoney;
+            nowMoney = nowMoney + drawingMoney;
+            System.out.println(account.name + "余额：" + account.money);
+            System.out.println(this.getName() + "现金" + nowMoney);
+        }
+    }
+}
+```
+
+结果演示：
+
+![Demo21](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo21.png?ynotemdtimestamp=1647071903556)
+
+**案例3同步实现：**
+
+```ja
+package top.cxy96.multithreading.Demo04;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UnsafeList {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            new Thread(()->{
+                synchronized (list) {
+                    list.add(Thread.currentThread().getName());
+                }
+            }).start();
+        }
+        try {
+            Thread.sleep(100);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        System.out.println(list.size());
+    }
+}
+```
+
+结果演示：
+
+![Demo22](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo22.png?ynotemdtimestamp=1647071903556)
+
+**安全的列表：**
+
+```jave
+package top.cxy96.multithreading.Demo04;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class TestJUC {
+    public static void main(String[] args) {
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>();
+        for (int i = 0; i < 10000; i++) {
+            new Thread(()->{
+                list.add(Thread.currentThread().getName());
+            }).start();
+        }
+        try{
+            Thread.sleep(100);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        System.out.println(list.size());
+    }
+}
+```
+
+结果演示：
+
+![Demo22](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo22.png?ynotemdtimestamp=1647071903556)
+
+### 4.4 死锁
+
+​	多个线程各自占有一些共享资源，并且相互等待其他线程占有的资源才能运行，而导致两个或多个线程都在等待对方释放资源，都停止执行的情况。
+
+**死锁产生情况：**
+
+* 一个资源每次只能被一个进程使用
+* 一个进程请求资源阻塞时，对以获取资源保存锁的状态
+
+实列代码：
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+public class DeadLock {
+    public static void main(String[] args) {
+        Eat eat1 = new Eat(0, "张三");
+        Eat eat2 = new Eat(1, "李四");
+        eat1.start();
+        eat2.start();
+    }
+}
+// 鸡腿
+class ChiekenLeg{}
+// 苹果
+class Apple{}
+class Eat extends Thread{
+    // 需要的资源只有一份 ，用static来保证只有一份
+    static ChiekenLeg chiekenleg = new ChiekenLeg();
+    static Apple apple = new Apple();
+    int choice;
+    String PersonName; // 吃东西的人
+
+    Eat(int choice,String name){
+        this.choice = choice;
+        this.PersonName = name;
+    }
+
+    @Override
+    public void run() {
+        try{
+            eat();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+    private void eat() throws InterruptedException{
+        if(choice==0){
+            synchronized (chiekenleg){
+                System.out.println(this.PersonName+"获取鸡腿的锁");
+                Thread.sleep(1000);
+                synchronized (apple){
+                    System.out.println(this.PersonName+"获取苹果的锁");
+                }
+            }
+        }else{
+            synchronized (apple){
+                System.out.println(this.PersonName+"获取苹果的锁");
+                Thread.sleep(1000);
+                synchronized (chiekenleg){
+                    System.out.println(this.PersonName+"获取鸡腿的锁");
+                }
+            }
+        }
+    }
+}
+```
+
+
+
+结果演示：
+
+![Demo23](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo23.png?ynotemdtimestamp=1647071903556)
+
+防止死锁：
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+public class DeadLock {
+    public static void main(String[] args) {
+        Eat eat1 = new Eat(0, "张三");
+        Eat eat2 = new Eat(1, "李四");
+        eat1.start();
+        eat2.start();
+    }
+}
+// 鸡腿
+class ChiekenLeg{}
+// 苹果
+class Apple{}
+class Eat extends Thread{
+    // 需要的资源只有一份 ，用static来保证只有一份
+    static ChiekenLeg chiekenleg = new ChiekenLeg();
+    static Apple apple = new Apple();
+    int choice;
+    String PersonName; // 吃东西的人
+
+    Eat(int choice,String name){
+        this.choice = choice;
+        this.PersonName = name;
+    }
+
+    @Override
+    public void run() {
+        try{
+            eat();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+    private void eat() throws InterruptedException{
+        if(choice==0){
+            synchronized (chiekenleg){
+                System.out.println(this.PersonName+"获取鸡腿的锁");
+                Thread.sleep(1000);
+            }
+            synchronized (apple){
+                System.out.println(this.PersonName+"获取苹果的锁");
+            }
+        }else{
+            synchronized (apple){
+                System.out.println(this.PersonName+"获取苹果的锁");
+                Thread.sleep(1000);
+            }
+            synchronized (chiekenleg){
+                System.out.println(this.PersonName+"获取鸡腿的锁");
+            }
+        }
+    }
+}
+```
+
+
 
 ## 5. 线程通信
 
