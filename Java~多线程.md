@@ -1181,8 +1181,298 @@ class Eat extends Thread{
 }
 ```
 
+### 4.5 Lock
 
+* JDK5.0开始通过显式定义同步锁对象来实现同步
+* java.util.concurrentlocks.Lock接口是控制多个线程对共享资源进行访问的工具。
+* ReentrantLock类实现Lock,拥有与synchronized相同的并发性。
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo04;
+
+import java.util.concurrent.locks.ReentrantLock;
+
+public class TestLock {
+    public static void main(String[] args) {
+        TestLock2 testLock2 = new TestLock2();
+        new Thread(testLock2).start();
+        new Thread(testLock2).start();
+        new Thread(testLock2).start();
+    }
+}
+class TestLock2 implements Runnable{
+    int ticketNums = 10;
+
+    // 定义Lock锁
+    private final ReentrantLock lock = new ReentrantLock();
+
+    @Override
+    public void run() {
+        while (true){
+            lock.lock();                // 加锁
+            try{
+                if(ticketNums>0){
+                    try{
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                    System.out.println(ticketNums--);
+                }else{
+                    break;
+                }
+            }finally {
+                lock.unlock();          // 解锁
+            }
+        }
+    }
+}
+```
+
+结果演示：
+
+![Demo24](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo24.png?ynotemdtimestamp=1647071903556)
 
 ## 5. 线程通信
 
-## 6.
+### 5.1 生产者消费者问题
+
+![Demo25](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo25.png?ynotemdtimestamp=1647071903556)
+
+#### 管程法：
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo05;
+
+// 测试生产者消费者模式-->利用缓冲区解决：管程法
+public class TestPC {
+    public static void main(String[] args) {
+        SynContainer container = new SynContainer();
+
+        new Productor(container).start();
+        new Consumer(container).start();
+    }
+}
+// 生产者
+class Productor extends Thread{
+    SynContainer container;
+    public Productor(SynContainer container){
+        this.container = container;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            container.push(new Chicken(i));
+            System.out.println("生产了"+i+"只鸡");
+        }
+    }
+}
+
+// 消费者
+class Consumer extends Thread{
+    SynContainer container;
+    public Consumer(SynContainer container){
+        this.container = container;
+    }
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("消费了-->"+container.pop().id+"只鸡");
+        }
+    }
+}
+
+// 产品
+class Chicken{
+    int id;  // 产品编号
+    public Chicken(int id) {
+        this.id = id;
+    }
+}
+
+// 缓冲区
+class SynContainer{
+    // 容器大小
+    Chicken[] chickens = new Chicken[10];
+    // 容器计数器
+    int count = 0;
+
+    // 生产者放入产品
+    public synchronized void push(Chicken chicken){
+        if(count == chickens.length){
+            // 通知消费者消费,生产者等待
+            try{
+                this.wait();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        chickens[count] = chicken;
+        // 同志消费者
+        this.notify();
+        count++;
+    }
+
+    // 消费者消费产品
+    public synchronized Chicken pop(){
+        if(count==0){
+            // 等待生产者生产。消费者等待
+            try{
+                this.wait();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        count--;
+        Chicken chicken = chickens[count];
+        // 通知生产者
+        this.notify();
+        return chicken;
+    }
+}
+```
+
+结果演示：
+
+![Demo26](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo26.png?ynotemdtimestamp=1647071903556)
+
+
+#### 信号灯法：
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo05;
+
+// 信号灯法：标志位解决
+public class TestPC2 {
+    public static void main(String[] args) {
+        Food food = new Food();
+        new Restaurant(food).start();
+        new Customer(food).start();
+
+    }
+}
+// 生产者
+class Restaurant extends Thread{
+    Food food = new Food();
+    public Restaurant(Food food) {
+        this.food = food;
+    }
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            if(i%2 == 0){
+                this.food.product("鱼香肉丝");
+            }
+            else {
+                this.food.product("肉末茄子");
+            }
+        }
+    }
+}
+// 消费者
+class Customer extends Thread{
+    Food food = new Food();
+
+    public Customer(Food food) {
+        this.food = food;
+    }
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            this.food.eat();
+        }
+    }
+}
+// 产品
+class Food{
+    String foodName;
+    boolean flag = true;
+    // 做饭
+    public synchronized void product(String foodName){
+        System.out.println("做了"+foodName);
+        // 通知顾客吃饭
+        if(!flag) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        this.foodName = foodName;
+        this.notifyAll();
+        this.flag = !this.flag;
+    }
+    // 吃饭
+    public synchronized void eat(){
+        if(flag){
+            try {
+                this.wait();
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("吃了"+foodName);
+        // 通知饭馆做饭
+        this.notifyAll();
+        this.flag = !this.flag;
+    }
+}
+```
+
+结果演示：
+
+![Demo27](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo27.png?ynotemdtimestamp=1647071903556)
+
+### 5.2 线程池
+
+好处：
+
+* 把创建的线程放入线程池，节省了线程创建和销毁的资源消耗
+* 便于线程管理
+
+使用：
+
+* JDK5.0起提供了线程池相关的API:ExecutorService 和 Executors
+
+示例代码：
+
+```java
+package top.cxy96.multithreading.Demo05;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class TestPool {
+    public static void main(String[] args) {
+        // 创建线程池
+        ExecutorService executorService =  Executors.newFixedThreadPool(10);
+
+        // 将线程放进线程池
+        for (int i = 0; i < 11; i++) {
+            executorService.execute(new MyThread());
+        }
+
+        // 关闭连接
+        executorService.shutdownNow();
+    }
+}
+
+class MyThread implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
+
+结果演示：
+
+![Demo28](https://cdn.jsdelivr.net/gh/cxy20219/image/images/Multithreading_Demo28.png?ynotemdtimestamp=1647071903556)
+
