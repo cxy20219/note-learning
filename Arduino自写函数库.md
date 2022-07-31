@@ -34,6 +34,20 @@ float get_destance(){
 }
 ```
 
+```c
+float get_destance(int out , int in){
+  digitalWrite(out,LOW);
+  delayMicroseconds(2);
+  digitalWrite(out,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(out,LOW);
+  float distance = pulseIn(in,HIGH)/58.00;
+  return distance;
+}
+```
+
+
+
 ## DHT 温湿度
 
 安装DHT库与 Adafruit Unified Sensor
